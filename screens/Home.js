@@ -8,7 +8,8 @@ const Home = ({navigation}) => {
         <View style={styles.container}> 
             <Header />
             <Text style={styles.text}>Home screen</Text>
-            <Text style={styles.text}>Aici o sa fie un flatlist cu toate componentele.si inca alte chestii{'\n'}</Text>
+            <Text style={styles.text}>Aici o sa fie un flatlist cu toate componentele{'\n'}</Text>
+            <Text style={styles.text}>acuma cred ca merge sa lucram in second branch{'\n'}</Text>
             <Button title='Dute la Notite' onPress={()=>{navigation.navigate("Notes")}}/>
         </View>
     )
