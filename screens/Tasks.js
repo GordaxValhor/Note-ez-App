@@ -1,15 +1,15 @@
 import React from 'react'
 import { View, Text,StyleSheet } from 'react-native'
 
-const Notes = () => {
+const Tasks = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Notite si toate cele</Text>
+            <Text style={styles.text}>Todo/Tasks si toate cele</Text>
         </View>
     )
 }
 
-export default Notes
+export default Tasks
 const styles = StyleSheet.create({
     container: {
         flex: 1,

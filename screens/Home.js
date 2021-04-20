@@ -1,15 +1,19 @@
 import React from 'react'
-import { View, Text,StyleSheet,Button } from 'react-native';
+import { View, Text,StyleSheet,Button,StatusBar, } from 'react-native';
 
 import Header from '../components/header.js';
 
 const Home = ({navigation}) => {
     return (
+        
         <View style={styles.container}> 
+            <StatusBar
+                barStyle="light-content"
+            />
             <Header />
-            <Text style={styles.text}>Home screen</Text>
+            <Text style={styles.text}>Home screen care e si screnul pentru home</Text>
             <Text style={styles.text}>Aici o sa fie un flatlist cu toate componentele{'\n'}</Text>
-            <Button title='Dute la Notite' onPress={()=>{navigation.navigate("Notes")}}/>
+            {/* <Button title='Dute la Notite' onPress={()=>{navigation.navigate("Notes")}}/> */}
         </View>
     )
 }

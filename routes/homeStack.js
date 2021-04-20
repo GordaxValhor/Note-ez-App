@@ -6,8 +6,9 @@ import Notes from '../screens/Notes';
 
 // petru navigation
 
-import { NavigationContainer, StackActions } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import tabStack from './tabStack';
 
 
 
@@ -17,7 +18,7 @@ const homeStack = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="Home" options={{header: () => {null}}} component={Home}/>
+                <Stack.Screen name="Home" options={{header: () => {null}}} component={tabStack}/>
                 <Stack.Screen name="Notes" component={Notes}/>
             </Stack.Navigator>
         </NavigationContainer>
