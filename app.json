@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Note-ez-App",
-    "slug": "Note-ez-App",
+    "slug": "note-ez-App",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,6 +10,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "sdkVersion": "40.0.0",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
