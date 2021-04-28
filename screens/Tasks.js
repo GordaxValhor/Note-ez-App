@@ -1,9 +1,12 @@
 import React from 'react'
 import { View, Text,StyleSheet } from 'react-native'
 
+import Header from '../components/header.js';
+
 const Tasks = () => {
     return (
         <View style={styles.container}>
+            <Header />
             <Text style={styles.text}>Todo/Tasks si toate cele</Text>
         </View>
     )
