@@ -18,17 +18,19 @@ const homeStack = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="Home" options={{header: () => {null}}} component={tabStack}/>
-                <Stack.Screen name="Notes" component={Notes}/>
+                <Stack.Screen name="Notes" options={{header: () => {null}}} component={tabStack} />
+                {/* <Stack.Screen name="" component={Notes}/> */}
                 <Stack.Screen name="NotePage" component={NotePage}
-                options={ ({navigation,route}) =>{ return { headerLeft: () => (
-                    <HeaderBackButton
-                        onPress={() => {
-                            console.log(route);
-                            navigation.navigate('Home',{});
-                        }}
-                    />
-                    ),}}}
+                // options={ ({navigation,route}) =>{ return { headerLeft: () => (
+                //     <HeaderBackButton
+                //         onPress={() => {
+                //             routeParamName = route.params.nume;
+                //             console.log("route din homestack",route.params.nume);
+                //             // navigation.navigate({name:"Home",params: {post:routeParamName,merge:true,}});
+                //             navigation.navigate("Home",route);
+                //         }}
+                //     />
+                //     ),}}}
                 />
             </Stack.Navigator>
         </NavigationContainer>
