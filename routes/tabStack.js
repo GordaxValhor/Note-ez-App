@@ -41,7 +41,7 @@ const tabStack = ({route}) =>{
                         borderWidth:1,
                         borderColor: 'white',
                         borderRadius: 10,
-                        backgroundColor: '#1f1f1f',
+                        backgroundColor: '#0a0a0a',
                         width: '63%',
                         left: (Dimensions.get('window').width / 2) - 129.55,
                     }
