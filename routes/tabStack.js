@@ -1,6 +1,6 @@
 import React ,{useEffect,useState} from 'react'
 import { Text, View,Dimensions, Image } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer,useRoute } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
@@ -17,20 +17,23 @@ const tabStack = ({route}) =>{
     //facem un context hook ca sa putem trimite props de la route
 
     //console.log("route din tabstack",route);
-    
-    const [routeFromNotePage,setrouteFromNotePage] = useState();
-    
-    // useEffect(() => {
-    //     if(route != undefined) {
-    //         //console.log("useeffect route din tabstack:",route.params.nume)
-    //     console.log("useeffect routeFromNotePage din tabstack:",routeFromNotePage)
-    //     setrouteFromNotePage(route)
-    //     }
-    //   }, [route]);
+    const [prevRoute,setPrevRoute] = useState();
+    useEffect(() => {
+        // if(route != undefined) {
+        //     //console.log("useeffect route din tabstack:",route.params.nume)
+        // console.log("useeffect routeFromNotePage din tabstack:",routeFromNotePage)
+        // setrouteFromNotePage(route)
+        // }
+        // if(route!=undefined) {console.log('routa:',route.state.index);
+        // setrouteFromNotePage(route.state.index)}
+        //console.log('tabstack route:',route)
+        if(route != undefined){
+            setPrevRoute(route);
+        }
+      }, [route]);
 
     
     return(
-        <routeContex.Provider value={routeFromNotePage}>
             <Tab.Navigator
                 tabBarOptions={{
                     showLabel: false,
@@ -56,10 +59,10 @@ const tabStack = ({route}) =>{
                                 <Text style={{fontSize:16,color:focused ? 'gray': 'white'}}>Notes</Text>
                             </View>
                         )
-                    }}
+                    }} 
                     
                     />
-                <Tab.Screen name="Add" component={Add} options={{
+                <Tab.Screen name="Add"  options={{
                     tabBarIcon:({focused}) =>(
                         <View>
                             <Image 
@@ -68,7 +71,9 @@ const tabStack = ({route}) =>{
                             />
                         </View>
                     )
-                }}/>
+                }} 
+                children={() => <Add  addWhat={prevRoute}/>}
+                />
                 <Tab.Screen name="Tasks" component={Tasks} options={{
                     tabBarIcon:({focused}) =>(
                         <View>
@@ -77,7 +82,6 @@ const tabStack = ({route}) =>{
                     )
                 }}/>
             </Tab.Navigator>
-        </routeContex.Provider>
     )
 }
 export default tabStack

@@ -37,7 +37,7 @@ const obiecte =[
 const tableN = `create table if not exists Notes(NoteId INTEGER PRIMARY KEY,Nume TEXT,TextContinut TEXT, Imagini TEXT, Fisiere TEXT, Etichete TEXT, Preferinte TEXT, DataCreare TEXT, UltimaEditare TEXT,Arhiva TEXT);`
 
 
-const Notes = ( {navigation, dateNote} ) => {
+const Notes = ( { navigation, dateNote} ) => {
 
     
 
@@ -83,12 +83,6 @@ const Notes = ( {navigation, dateNote} ) => {
       })
       console.log(db);
     }, [])
-
-
-
-
-
-
 
 
     return (
