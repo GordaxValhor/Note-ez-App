@@ -18,8 +18,8 @@ export default Header
 const styles = StyleSheet.create({
     container: {
         //flex: 1,
-      flexDirection:'row',
-      backgroundColor: 'transparent',
+        flexDirection:'row',
+      backgroundColor: '#0a0a0a',
       alignItems: 'center',
       justifyContent: 'space-between',
       borderWidth: 1,
@@ -27,7 +27,10 @@ const styles = StyleSheet.create({
       color:'white',
       paddingHorizontal: 20,
       borderRadius: 10,
-      width: '93%',
+      width: '97.4%',
+      position:'absolute',
+        top: 0,
+      zIndex: 99,
     },
     input:{
         color: 'white',
