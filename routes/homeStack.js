@@ -3,11 +3,12 @@ import { View, Text } from 'react-native'
 
 import Home from '../screens/Home';
 import Notes from '../screens/Notes';
+import NotePage from '../screens/NotePage';
 
 // petru navigation
-
-import { NavigationContainer, StackActions } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator,HeaderBackButton } from '@react-navigation/stack';
+import tabStack from './tabStack';
 
 
 
@@ -17,8 +18,20 @@ const homeStack = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="Home" options={{header: () => {null}}} component={Home}/>
-                <Stack.Screen name="Notes" component={Notes}/>
+                <Stack.Screen name="Notes" options={{header: () => {null}}} component={tabStack} />
+                {/* <Stack.Screen name="" component={Notes}/> */}
+                <Stack.Screen name="NotePage" component={NotePage}
+                // options={ ({navigation,route}) =>{ return { headerLeft: () => (
+                //     <HeaderBackButton
+                //         onPress={() => {
+                //             routeParamName = route.params.nume;
+                //             console.log("route din homestack",route.params.nume);
+                //             // navigation.navigate({name:"Home",params: {post:routeParamName,merge:true,}});
+                //             navigation.navigate("Home",route);
+                //         }}
+                //     />
+                //     ),}}}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     )
