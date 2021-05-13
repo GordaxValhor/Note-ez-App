@@ -1,14 +1,25 @@
-import React from 'react'
-import { View,StyleSheet, Text,TextInput } from 'react-native'
+import React, {useState} from 'react'
+import { View,StyleSheet, Text,TextInput,TouchableOpacity,Image } from 'react-native'
 
 import {globalStyles} from '../assets/globalStyles/globalStyles';
 
-const AddTask = () => {
+
+
+
+
+const AddTask = ({navigation}) => {
+
+    
     return (
         <View style={styles.container}>
-            <Text style={[styles.text,{marginBottom: 20,}]}>Go back</Text>
-                <TextInput multiline  style={[styles.titlu,{marginBottom:15,}]}  placeholder={'Titlu task'} placeholderTextColor="#fff4" autoFocus={true} />
-                <TextInput  multiline  style={[styles.text,{height:'90%',textAlignVertical: "top",width:'100%'}]}  placeholder={'task'} placeholderTextColor="#fff4"/>
+            <TouchableOpacity style={[styles.text,{marginBottom: 20,}]}>
+                <Image 
+                    style={{height:20,width:25,marginVertical:10}}
+                    source={require('../assets/drawable-hdpi/drawable-xxhdpi/back-arrow.png')}
+                />
+            </TouchableOpacity>
+                <TextInput multiline   style={[styles.titlu,{marginBottom:15,}]}  placeholder={'Titlu task'} placeholderTextColor="#fff4" autoFocus={true}  autoCorrect={false} spellCheck={false}/>
+                <TextInput  multiline   style={[styles.text,{height:'90%',textAlignVertical: "top",width:'100%'}]}  placeholder={'task'} placeholderTextColor="#fff4"/>
         </View>
     )
 }

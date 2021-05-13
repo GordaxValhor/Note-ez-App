@@ -11,33 +11,35 @@ import Database from 'expo-sqlite-hooks/database';
 import { DBProvider } from 'expo-sqlite-hooks/context/database';
 
 
+import NotesList from '../components/NotesList';
+
 //ingoram log boxurile
 LogBox.ignoreAllLogs();
 
-const obiecte =[
-    {nume: 'Ce facem maine',text: 'dsadadsasdadadddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsa',height:100,},
-    {nume: 'Ada 2',text: 'dsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsa',height:100},
-    {nume: 'Ada 13',text: 'ieri am mers sa vad cum se mai simte coco',height:100},
-    {nume: 'Ada 14',text: 'dsadadsasdaddsadadsasdad',height:100},
-    {nume: 'Ada 15',text: 'dsadadsasdad',height:100},
-    {nume: 'Ada 16',text: 'dsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdad',height:100},
-    {nume: 'Ada 17',text: 'dsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdad',height:100},
-    {nume: 'Ada 18',text: '',height:100},
-    {nume: 'Ada 19',text: 'dsadadsasdad',height:100},
-    {nume: 'Ada 143',text: 'dsadadsasdaddsadadsasdad',height:100},
-    {nume: 'Ada 152',text: 'dsadadsasdad',height:100},
-    {nume: 'Ada 161',text: 'dsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdad',height:100},
-    {nume: 'Ada 172',text: 'dsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdad',height:100},
-    {nume: 'Ada 183',text: 'dsadadsasdad',height:100},
-    {nume: 'Ada 193',text: 'dsadadsasdad',height:100},
+// const obiecte =[
+//     {nume: 'Ce facem maine',text: 'dsadadsasdadadddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsa',height:100,},
+//     {nume: 'Ada 2',text: 'dsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsa',height:100},
+//     {nume: 'Ada 13',text: 'ieri am mers sa vad cum se mai simte coco',height:100},
+//     {nume: 'Ada 14',text: 'dsadadsasdaddsadadsasdad',height:100},
+//     {nume: 'Ada 15',text: 'dsadadsasdad',height:100},
+//     {nume: 'Ada 16',text: 'dsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdad',height:100},
+//     {nume: 'Ada 17',text: 'dsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdad',height:100},
+//     {nume: 'Ada 18',text: '',height:100},
+//     {nume: 'Ada 19',text: 'dsadadsasdad',height:100},
+//     {nume: 'Ada 143',text: 'dsadadsasdaddsadadsasdad',height:100},
+//     {nume: 'Ada 152',text: 'dsadadsasdad',height:100},
+//     {nume: 'Ada 161',text: 'dsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdad',height:100},
+//     {nume: 'Ada 172',text: 'dsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdaddsadadsasdad',height:100},
+//     {nume: 'Ada 183',text: 'dsadadsasdad',height:100},
+//     {nume: 'Ada 193',text: 'dsadadsasdad',height:100},
     
-]
+// ]
 
 // sql pt creare tabel
 const tableN = `create table if not exists Notes(NoteId INTEGER PRIMARY KEY,Nume TEXT,TextContinut TEXT, Imagini TEXT, Fisiere TEXT, Etichete TEXT, Preferinte TEXT, DataCreare TEXT, UltimaEditare TEXT,Arhiva TEXT);`
 
 
-const Notes = ( { navigation, dateNote} ) => {
+const Notes = ( {navigation} ) => {
 
     
 
@@ -65,9 +67,11 @@ const Notes = ( { navigation, dateNote} ) => {
     //     {updateNotes(dateNote);}
     //   }, [dateNote]);
 
+    //----------------------------
+    //use state si use effect pentru refresh
+    
 
-
-    //conectare la db si creare db
+    //---------------------
     
     const [db, setDB] = useState(null);
 
@@ -81,9 +85,17 @@ const Notes = ( { navigation, dateNote} ) => {
       .catch(err => {
         //Do something...
       })
-      console.log(db);
+      //console.log('connetiune la db din notes',db);
     }, [])
 
+    
+
+ 
+
+
+     //-----!!!-----------------------------------
+     //facem un state pentru refresh pe care o sa il trimitem la notelist 
+     //in note list facem un useeffect ca sa putem da refresh in functie de propul refresh primit din notes
 
     return (
         <View style={styles.container}>
@@ -95,21 +107,15 @@ const Notes = ( { navigation, dateNote} ) => {
             <View style={{justifyContent:'center',alignItems:'center',marginBottom:17}}>
                 <Header />
             </View>
-            <ScrollView>
-            <View style={{height:50}}></View>
-                <MasonryList 
-                    data={obiecte}
-                    renderItem={( {item} ) =>(
-                        <TouchableOpacity style={styles.noteStyle} onPress={()=>{navigation.navigate('NotePage',item)}}>
-                            <Text style={styles.title}>{item.nume}</Text>
-                            <Text style={styles.text}>{item.text}</Text>
-                        </TouchableOpacity>)}
-                    getHeightForItem={({ item }) => item.height + 2}
-                    numColumns={2}
-                    keyExtractor={item => item.nume}
-                />
-                <View style={{height:100}}></View>
-            </ScrollView>
+            {
+                db === null ? 
+                <Text>Loading DB</Text>
+              :
+                <DBProvider db={db}>
+                    <NotesList navigation={navigation} />
+                </DBProvider>
+            }
+            
             {/* <Button title="vezi 2" onPress={console.log("din notes",dateNote)}/> */}
         </View>
     )
