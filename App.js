@@ -10,11 +10,22 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeStack from './routes/homeStack';
+ import DrawerStack from './routes/drawerStack'
+
+import Database from 'expo-sqlite-hooks/database';
+import { DBProvider } from 'expo-sqlite-hooks/context/database';
+
 
 export default function App() {
+
+  const db = new Database("Note-ez-app-DB-try", "1.0");
+
   return (
         //nav stack for home
-        <HomeStack />
+        <DBProvider db={db}>
+          <DrawerStack />
+        </DBProvider>
+        
   );
 }
 

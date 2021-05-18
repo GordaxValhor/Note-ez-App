@@ -1,12 +1,17 @@
 import React from 'react'
-import { View, Text ,TextInput,StyleSheet,Image} from 'react-native'
+import { View, Text ,TextInput,StyleSheet,Image,TouchableOpacity} from 'react-native'
 
-const Header = () => {
+const Header = ({navigation}) => {
     return (
         <View style={styles.container}>
-            <Text style={{color:'white'}}>Menu</Text>
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                <Image
+                    style={{marginTop:0,resizeMode: "contain",height:21,}}
+                    source={require('../assets/drawable-xhdpi/grp160.png')}
+                />
+            </TouchableOpacity>
             <Image
-                style={{height:30,width:80,margin: 10,}}
+                style={{height:30,width:80,}}
                 source={require('../assets/drawable-mdpi/grp25.png')}
             />
             <TextInput style={styles.input} placeholderTextColor="#5A5A5A" placeholder={'Search for notes'}/>
@@ -26,7 +31,8 @@ const styles = StyleSheet.create({
       borderColor: 'white',
       color:'white',
       paddingHorizontal: 20,
-      borderRadius: 10,
+      paddingVertical:7,
+      borderRadius: 7,
       width: '97.4%',
       position:'absolute',
         top: 0,
@@ -39,5 +45,6 @@ const styles = StyleSheet.create({
         paddingVertical:0.5,
         paddingHorizontal: 4,
         fontSize:16,
+        marginRight:38,
     }
   });

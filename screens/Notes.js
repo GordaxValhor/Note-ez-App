@@ -105,7 +105,7 @@ const Notes = ( {navigation} ) => {
                 backgroundColor="#0a0a0a"
             />
             <View style={{justifyContent:'center',alignItems:'center',marginBottom:17}}>
-                <Header />
+                <Header  navigation={navigation}/>
             </View>
             {
                 db === null ? 

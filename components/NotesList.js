@@ -41,7 +41,7 @@ const NotesList = ({navigation,shouldRefresh}) => {
                             <TouchableOpacity style={styles.noteStyle} onPress={()=>{navigation.navigate('NotePage',item)}}>
                                 <Text style={styles.title}>{item.Nume}</Text>
                                 <Text numberOfLines={20}style={styles.text}>{item.TextContinut} </Text>
-                                <Text style={styles.text}>{item.NoteId} </Text>
+                                {/* <Text style={styles.text}>{item.NoteId} </Text> */}
                             </TouchableOpacity>)}
                         getHeightForItem={() => 100 + 2}
                         numColumns={2}
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         //flexDirection:'row',
         minWidth: 165,
         maxWidth: 185,
-        minHeight: 110,
+        minHeight: 70,
         maxHeight: 500,
         borderWidth: 1,
         borderColor:'#8C8C8C',

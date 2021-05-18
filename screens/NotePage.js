@@ -1,7 +1,9 @@
 import React ,{ useState,useEffect } from 'react'
-import { View,StyleSheet, Text,TextInput } from 'react-native'
-
+import { View,StyleSheet, Text,TextInput,Button,Image,TouchableOpacity } from 'react-native'
+import { useWindowDimensions } from 'react-native';
 import {globalStyles} from '../assets/globalStyles/globalStyles';
+
+import { useQuery, useInsert, useUpdate, useDelete } from 'expo-sqlite-hooks/hooks/database';
 
 
 // const navigationOptions = ({navigation}) => {
@@ -12,47 +14,76 @@ import {globalStyles} from '../assets/globalStyles/globalStyles';
 
 
 
-const NotePage = ( { navigation: { setParams } ,route} ) => {
+const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
     const {Nume,TextContinut,NoteId} = route.params;
+
+    const windowWidth = useWindowDimensions().width;
 
     //console.log(route.params);
     const [numeNote,setNumeNote] = useState(String(Nume));
     const [textNote,setTextNote] = useState(String(TextContinut));
-    // useEffect(() => {
-    //     setParams({
-    //         params: {
-    //             post: numeNote
-    //         }
-    //       })
-    //   }, [numeNote]);
+    useEffect(() => {
+        setParams({
+            newParams: {
+                idNote: NoteId,
+                newTitlu: numeNote,
+                newText: textNote,
+            }
+          })
+      }, [numeNote,textNote]);
 
 
-    //funciton change params
-    // const updateParams = async(text)=>{
-    //     setParams({
-    //         nume:
-    //             route.params.nume = numeNote,
-    //       })
-    //     setNumeNote(text)
-    //     setParams({
-    //         nume:
-    //             route.params.nume = numeNote,
-    //       })
-    //       console.log(route.params.nume);
-    //     }
-    
 
-    //modificarea note-ului in baza de date
+      // delte note 
+    const deleteNote = useDelete("Notes");
+    const handleDelete = (id) => {
+        //console.log(nume,continut,id);
+        deleteNote({field: "NoteId", conditional: "=", value: id.toString()})
+        .then(response => {
+            //alert("Pet updated");
+            //refresh();
+        })
+        .catch(err =>{
+            alert("Eroare la updatare notes");
+            console.error(err);
+        })
+    }
 
-    const db = new Database("Note-ez-app-DB-try", "1.0");
+    //pentru deschidere menu din header navigation
 
+    const [showOptions, setShowOptions] = useState(false);
+
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+          headerRight: () => (
+            <View style={{zIndex:1}}>
+                            <TouchableOpacity style={{marginRight:2,paddingHorizontal:20,paddingVertical:5,marginBottom:-8,}} onPress={() => setShowOptions(!showOptions)}>
+                                <Image style={{resizeMode: "contain",height:18,}}
+                                source={require('../assets/drawable-xxxhdpi/group88.png')}/>
+                            </TouchableOpacity>
+            </View>
+          ),
+        });
+      }, [navigation, showOptions]);
     
     
     return (
         <View style={[globalStyles.container,styles.container]}>
-            <Text style={styles.text}>Id note: {NoteId}</Text>
-            <TextInput multiline value={numeNote} style={styles.titlu} onChangeText={text => {setNumeNote(text)}}  placeholder={'Titlu note'} placeholderTextColor="#fff4"/>
-            <TextInput multiline value={textNote} style={styles.text} onChangeText={text=>setTextNote(text)} placeholder={'Note'} placeholderTextColor="#fff4"/>
+            {/* <Text style={styles.text}>Id note: {NoteId}</Text> */}
+            {
+                showOptions ? (
+                <View style={{position:'absolute',top:0,right:10,borderWidth:1,borderColor:'white',padding:10,borderRadius: 5,backgroundColor:'#0a0a0a',zIndex:1}}>
+                    <TouchableOpacity onPress={() =>{handleDelete(NoteId);navigation.navigate("Notes")}}>
+                        <Text style={{color:'white',paddingTop:8}}>Del</Text>
+                    </TouchableOpacity>
+                    <Text style={{color:'white',paddingTop:8}}>Share</Text>
+                    <Text style={{color:'white',paddingTop:8,paddingBottom:8}}>Copy</Text>                       
+                </View>
+                ): null
+            }
+            
+            <TextInput multiline value={numeNote} style={[styles.titlu,{marginBottom:15,width: windowWidth-20,}]} onChangeText={text => setNumeNote(text)}  placeholder={'Titlu note'} placeholderTextColor="#fff4"/>
+            <TextInput multiline value={textNote} style={[styles.text,{height:'90%',textAlignVertical: "top",width: windowWidth-20,}]} onChangeText={text=>setTextNote(text)} placeholder={'Note'} placeholderTextColor="#fff4"/>
             {/* <Text>indexu:{index}</Text> */}
         </View>
     )
@@ -67,7 +98,8 @@ const styles = StyleSheet.create({
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
       color: 'white',
-      padding:19
+      padding:19,
+      zIndex:0,
     },
     text: {
         color: '#f5f5f5',
