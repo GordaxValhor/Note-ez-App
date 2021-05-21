@@ -35,19 +35,29 @@ const NotesList = ({navigation,shouldRefresh}) => {
     return (
         <ScrollView>
                 <View style={{height:50}}></View>
-                    <MasonryList 
-                        data={Notes}
-                        renderItem={( {item} ) =>(
-                            <TouchableOpacity style={styles.noteStyle} onPress={()=>{navigation.navigate('NotePage',item)}}>
-                                <Text style={styles.title}>{item.Nume}</Text>
-                                <Text numberOfLines={20}style={styles.text}>{item.TextContinut} </Text>
-                                {/* <Text style={styles.text}>{item.NoteId} </Text> */}
-                            </TouchableOpacity>)}
-                        getHeightForItem={() => 100 + 2}
-                        numColumns={2}
-                        keyExtractor={item => item.NoteId.toString()}
-                    />
-                    <View style={{height:100}}></View>
+                    <ScrollView >
+                        <View style={{flex:1,flexDirection:'row'}}>
+                            <FlatList 
+                                data={Notes.filter((_,i)=>i% 2 == 0)}
+                                renderItem={( {item} ) =>(
+                                    <TouchableOpacity style={styles.noteStyle} onPress={()=>{navigation.navigate('NotePage',item)}}>
+                                        <Text style={styles.title}>{item.Nume}</Text>
+                                        <Text numberOfLines={20}style={styles.text}>{item.TextContinut} </Text>
+                                        {/* <Text style={styles.text}>{item.NoteId} </Text> */}
+                                    </TouchableOpacity>)}
+                            />
+                            <FlatList 
+                                data={Notes.filter((_,i)=>i% 2 !== 0)}
+                                renderItem={( {item} ) =>(
+                                    <TouchableOpacity style={styles.noteStyle} onPress={()=>{navigation.navigate('NotePage',item)}}>
+                                        <Text style={styles.title}>{item.Nume}</Text>
+                                        <Text numberOfLines={20}style={styles.text}>{item.TextContinut} </Text>
+                                        {/* <Text style={styles.text}>{item.NoteId} </Text> */}
+                                    </TouchableOpacity>)}
+                            />
+                        </View>
+                        <View style={{height:100}}></View>
+                    </ScrollView>
         </ScrollView>
     )
 }

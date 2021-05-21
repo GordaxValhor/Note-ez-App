@@ -3,9 +3,6 @@ import { View, Text,StyleSheet,TouchableOpacity,FlatList,Button,StatusBar,Scroll
 
 import Header from '../components/header'
 
-import MasonryList from '@appandflow/masonry-list';
-
-
 //importam ce trebe pentru expo sqlite hooks
 import Database from 'expo-sqlite-hooks/database';
 import { DBProvider } from 'expo-sqlite-hooks/context/database';
@@ -40,32 +37,6 @@ const tableN = `create table if not exists Notes(NoteId INTEGER PRIMARY KEY,Nume
 
 
 const Notes = ( {navigation} ) => {
-
-    
-
-    // ca sa modific in lista luam ce parametri din route si schimbam in array
-    // aparent tre sa luam parametri cum am facut si dincolo
-    //console.log(route.params);
-    // const updateNotes = (obj) =>{
-    //     //console.log('aha');
-    //     if(obj.params != undefined) {
-    //         console.log('obj din fuct update notes',obj.params.params.nume);
-    //         console.log('obiecte:',obiecte[3][0].nume)
-    //         for(let i=0;i<=obiecte.length;i++){
-    //             // if(obiecte[i].nume == obj.params.params.nume){
-    //             //     obiecte[i].nume = obj.params.params.params.post;
-    //             // }
-    //         }
-
-    //     }
-        
-    // }
-
-    // useEffect(() => {
-    //     console.log("date din notes:",dateNote)
-    //     if(dateNote != undefined)
-    //     {updateNotes(dateNote);}
-    //   }, [dateNote]);
 
     //----------------------------
     //use state si use effect pentru refresh
