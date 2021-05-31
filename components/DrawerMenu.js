@@ -1,5 +1,5 @@
-import React,{useState} from 'react'
-import { View, Text, StyleSheet,Image,ScrollView,TouchableOpacity,Modal,TextInput } from 'react-native'
+import React,{useState,useEffect} from 'react'
+import { View, Text, StyleSheet,Image,ScrollView,TouchableOpacity,Modal,TextInput,FlatList } from 'react-native'
 
 import {
     DrawerContentScrollView,
@@ -8,6 +8,7 @@ import {
 
 import {globalStyles} from '../assets/globalStyles/globalStyles'
 
+import { useQuery, useInsert, useUpdate, useDelete } from 'expo-sqlite-hooks/hooks/database';
 
 const DrawerMenu = () => {
 
@@ -15,6 +16,46 @@ const DrawerMenu = () => {
 
 
     const [modalVisible, setModalVisible] = useState(false);
+
+    //inserare in baza de data a labels
+    const {loading, error, data, refresh} = useQuery("select * from Labels", []);
+
+    const [labelsList,setLabelsList] = useState();
+    useEffect(() => {
+        //Get all pets in the query
+        if(data)
+        {
+            const labelListAux = [];
+            for(let i = 0; i < data.rows.length; i++)
+            {
+                labelListAux.push(data.rows.item(i));
+            }
+            setLabelsList(labelListAux);
+        }
+        //refresh();
+        //console.log(data)
+    }, [data]);
+
+    //console.log('labels table:',data)
+    const [numeLabel,setNumeLabel] = useState('')
+    const insertLabel = useInsert("Labels");
+
+    const addLabel = () =>{
+        handleAdd();
+        setModalVisible(!modalVisible)
+    }
+    const handleAdd = () => {
+        insertLabel(["Nume"], [numeLabel])
+        .then(response => {
+            //alert("To do adaugat");
+            refresh();
+        })
+        .catch(err => {
+            alert("eroare la adaugare label");
+            console.error(err);
+        })
+        //refresh();
+    }
     return (
         <View style={[globalStyles.container,styles.container]}>
                 <Modal
@@ -32,9 +73,9 @@ const DrawerMenu = () => {
                         </TouchableOpacity>
                             <View style={{margin:15,padding:5,alignItems:'center'}}>
                                 {/* <Text style={globalStyles.text}>Adauga un label nou</Text> */}
-                                <TextInput placeholderTextColor="#fff4" style={globalStyles.text} placeholder='Adauga un label nou'></TextInput>
+                                <TextInput onChangeText={(text)=>setNumeLabel(text)} placeholderTextColor="#fff4" style={globalStyles.text} placeholder='Adauga un label nou'></TextInput>
                             </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> addLabel()}>
                             <Text style={globalStyles.text}>Add</Text>
                         </TouchableOpacity>
                     </View>
@@ -69,8 +110,15 @@ const DrawerMenu = () => {
                                 </TouchableOpacity>
                             </View>
                                 <View style={{marginLeft:20,marginTop:5,}}>
-                                    <Text style={globalStyles.text}>Label 1</Text>
-                                    <Text style={globalStyles.text}>Label 2</Text>
+                                    <View>
+                                        <FlatList 
+                                            data={labelsList}
+                                            renderItem={( {item} ) =>(
+                                                <TouchableOpacity>
+                                                    <Text style={styles.titlu}>{item.Nume}</Text>
+                                                </TouchableOpacity>)}
+                                        />
+                                    </View>
                             </View>
                         </View>
                     </View>
