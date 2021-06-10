@@ -15,7 +15,6 @@ const NotesList = ({navigation,shouldRefresh}) => {
     //conectare la db si creare db
     //use effect pentru a lua date din db
     useEffect(() => {
-        //Get all pets in the query
         if(data)
         {
             const NotesListAux = [];
@@ -27,6 +26,9 @@ const NotesList = ({navigation,shouldRefresh}) => {
         }
         refresh();
     }, [data]);
+    // useEffect(()=>{
+    //     refresh();
+    // },[]);
 
 
 

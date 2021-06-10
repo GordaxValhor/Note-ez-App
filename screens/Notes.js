@@ -6,7 +6,7 @@ import Header from '../components/header'
 //importam ce trebe pentru expo sqlite hooks
 import Database from 'expo-sqlite-hooks/database';
 import { DBProvider } from 'expo-sqlite-hooks/context/database';
-
+import * as SQLite from 'expo-sqlite';
 
 import NotesList from '../components/NotesList';
 
@@ -33,9 +33,13 @@ LogBox.ignoreAllLogs();
 // ]
 
 // sql pt creare tabel
-const tableN = `create table if not exists Notes(NoteId INTEGER PRIMARY KEY,Nume TEXT,TextContinut TEXT, Imagini TEXT, Fisiere TEXT, Etichete TEXT, Preferinte TEXT, DataCreare TEXT, UltimaEditare TEXT,Arhiva TEXT);`
+const tableNotes = `create table if not exists Notes(NoteId INTEGER PRIMARY KEY,Nume TEXT,TextContinut TEXT, Imagini TEXT, Fisiere TEXT, Etichete TEXT, Preferinte TEXT, DataCreare TEXT, UltimaEditare TEXT,Arhiva TEXT);`
 
+const tableLabels = `create table if not exists Labels(LabelId INTEGER PRIMARY KEY, Nume TEXT);`
 
+const tableLabelsForNotes = `create table if not exists LabelsForNotes(Id INTEGER PRIMARY KEY, IdLabel TEXT,IdNote TEXT);`
+
+//const drop =`DROP TABLE Labels;`
 const Notes = ( {navigation} ) => {
 
     //----------------------------
@@ -49,7 +53,7 @@ const Notes = ( {navigation} ) => {
     useEffect(() => {
       // Initialize the database
       const db = new Database("Note-ez-app-DB-try", "1.0");
-      db.createTables([tableN])
+      db.createTables([tableNotes,tableLabels,tableLabelsForNotes])
       .then(response => {
         setDB(db);
       })
@@ -67,6 +71,31 @@ const Notes = ( {navigation} ) => {
      //-----!!!-----------------------------------
      //facem un state pentru refresh pe care o sa il trimitem la notelist 
      //in note list facem un useeffect ca sa putem da refresh in functie de propul refresh primit din notes
+
+
+
+
+     // functi pt debugging
+
+     const eraseTable = () =>{
+      let db = SQLite.openDatabase("Note-ez-app-DB-try1.0");
+      //console.log(db)
+
+      // ---------------------!!!!!!Aparent asa se face un sqlite trazaction !!!!-----------------------
+      db.transaction(tx => {
+        tx.executeSql(
+          'DROP TABLE Labels;',
+          [],
+          (tx, result) => {
+            console.log(result)
+          },
+          (tx, error) => {
+            console.log(error);
+          }
+        );
+      });
+     }
+
 
     return (
         <View style={styles.container}>
@@ -87,7 +116,7 @@ const Notes = ( {navigation} ) => {
                 </DBProvider>
             }
             
-            {/* <Button title="vezi 2" onPress={console.log("din notes",dateNote)}/> */}
+            {/* <Button title="erase" onPress={()=>eraseTable()}/> */}
         </View>
     )
     }

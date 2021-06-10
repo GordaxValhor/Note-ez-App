@@ -10,6 +10,16 @@ import {globalStyles} from '../assets/globalStyles/globalStyles'
 
 import { useQuery, useInsert, useUpdate, useDelete } from 'expo-sqlite-hooks/hooks/database';
 
+
+
+
+//pentru icons 
+
+import { MaterialIcons } from '@expo/vector-icons';
+
+import EditLabel from '../components/EditLabel';
+
+
 const DrawerMenu = () => {
 
 
@@ -18,7 +28,7 @@ const DrawerMenu = () => {
     const [modalVisible, setModalVisible] = useState(false);
 
     //inserare in baza de data a labels
-    const {loading, error, data, refresh} = useQuery("select * from Labels", []);
+    const {loading, error, data, refresh} = useQuery("select * from Labels Order by LabelId desc", []);
 
     const [labelsList,setLabelsList] = useState();
     useEffect(() => {
@@ -39,6 +49,8 @@ const DrawerMenu = () => {
     //console.log('labels table:',data)
     const [numeLabel,setNumeLabel] = useState('')
     const insertLabel = useInsert("Labels");
+    const updateLabel = useUpdate("Labels");
+    const deleteLabel = useDelete("Labels");
 
     const addLabel = () =>{
         handleAdd();
@@ -56,6 +68,39 @@ const DrawerMenu = () => {
         })
         //refresh();
     }
+
+    //pentru editare si stergere labels
+
+
+    const handleUpdate = (newNume,id) => {
+        updateLabel({column: "Nume", value: newNume}, {field: "LabelId", conditional: "=", value: id})
+        .then(response => {
+            //alert("Label update succ");
+            refresh();
+        })
+        .catch(err =>{
+            //alert("esec");
+            console.error(err);
+        })
+    }
+    
+    const handleDelete = (id) => {
+        deleteLabel({field: "LabelId", conditional: "=", value: id})
+        .then(response => {
+            //alert("Label deleted");
+            refresh();
+        })
+        .catch(err =>{
+            //alert("label can't be deleted");
+            console.error(err);
+        })
+    }
+   
+
+
+
+
+
     return (
         <View style={[globalStyles.container,styles.container]}>
                 <Modal
@@ -98,8 +143,8 @@ const DrawerMenu = () => {
                         <View style={{marginLeft:9}}>
                             <Text style={styles.titlu}>Teams</Text>
                             <View style={{marginLeft:20,marginTop:5,}}>
-                                <Text style={globalStyles.text}>Echipa 1</Text>
-                                <Text style={globalStyles.text}>Echipa 2</Text>
+                                <Text style={styles.underText}>Echipa 1</Text>
+                                <Text style={styles.underText}>Echipa 2</Text>
                             </View>
                         </View>
                         <View style={{marginTop:20,marginLeft:9,width:250,}}>
@@ -114,16 +159,17 @@ const DrawerMenu = () => {
                                         <FlatList 
                                             data={labelsList}
                                             renderItem={( {item} ) =>(
-                                                <TouchableOpacity>
-                                                    <Text style={styles.titlu}>{item.Nume}</Text>
-                                                </TouchableOpacity>)}
+                                                <View>
+                                                        <EditLabel item={item} handleUpdate={handleUpdate} handleDelete={handleDelete}/>
+                                                </View>
+                                                )}
                                         />
                                     </View>
                             </View>
                         </View>
                     </View>
                 </ScrollView>
-                <View style={{height:150,borderTopWidth: 1,borderColor:'white',width:'100%',padding:5}}>
+                <View style={{height:80,borderTopWidth: 1,borderColor:'white',width:'100%',padding:5}}>
                     <Text style={globalStyles.text}>sectiune setting</Text>
                 </View>
         </View>
@@ -148,6 +194,11 @@ const styles = StyleSheet.create({
     titlu: {
         fontSize: 18,
         color: 'white',
+    },
+    underText: {
+        fontSize: 16,
+        color:'#BFBFBF',
+        marginBottom:5,
     },
     modalStyle:{
         width:270,
