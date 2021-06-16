@@ -25,7 +25,7 @@ const AddNote = ({navigation}) => {
 
 
     //ultimul id de la ultimul note creat
-    const LastId = useQuery("select * from Labels WHERE LabelId = (select max(LabelId) from Labels)",[]);
+    const LastId = useQuery("select * from Notes WHERE NoteId  = (select max(NoteId) from Notes)",[]);
 
 
     const CeAvemInTabel = useQuery("select * from LabelsForNotes",[]);
@@ -52,26 +52,69 @@ const AddNote = ({navigation}) => {
 
 
         if(LastId.data != undefined) {
-            console.log('last id:',LastId.data.rows.item(0).LabelId)
-            setLastNId(LastId.data.rows.item(0).LabelId)
+            //console.log('last id:',LastId.data.rows.item(0).LabelId)
+            setLastNId(LastId.data.rows.item(0).NoteId)
         }
-        console.log('tabel labelsfornotes:',CeAvemInTabel.data)
-    }, [data]);
+        //console.log('tabel labelsfornotes:',CeAvemInTabel.data)
+        setCurrentLabels([]);
+    }, [data,navigation]);
+
+    useEffect(() => {
+        setCurrentLabels([]);
+    }, [navigation])
 
 
-    //pentru adaugare Labels
+
+
+    //console.log('tabel labelsfornotes:',CeAvemInTabel.data)
+    //pentru adaugare LabelsforNotes
+
+    const [currentLabels,setCurrentLabels] = useState([])
     const insertLabelForNotes = useInsert("LabelsForNotes");
 
-    const AddNewLabel = (idL) =>{
-        handleAddLabelForNotes(idL,LastNId +1);
+    const AddNewLabel = (idL,nume) =>{ 
+        var label = {
+            nume: nume,
+            id: idL
+        }
+        //pentru verificare label daca exista deja
+
+        let filtramLabels = currentLabels.filter(item => item.nume !== label.nume)
+
+        setCurrentLabels([...filtramLabels,label])
+
+        // let filteredPerson = this.state.likes.filter(like => like.name !== person.name);
+        // this.setState({
+        // likes: [...filteredPerson, person]
+        // })  
+
+
+        //setCurrentLabels(prevArray => [...prevArray, label])
+        //handleAddLabelForNotes(idL,LastNId +1);
+    }
+
+    const AddAllLabels = () =>{
+        currentLabels.forEach(item =>{
+            //console.log(item);
+            handleAddLabelForNotes(item.id,LastNId+1,item.nume)
+        })
     }
     
+    //remove label
 
-    const handleAddLabelForNotes = (idL,idN) => {
-            insertLabelForNotes(["IdLabel", "IdNote"], [idL, idN])
+    const RemoveLabel = (name) =>{
+
+        setCurrentLabels((currentLabels.filter(item => item.nume !== name)))
+
+    }
+
+
+    const handleAddLabelForNotes = (idL,idN,nume) => {
+            //console.log('idl:',idL,'idN ',idN);
+            insertLabelForNotes(["IdLabel", "IdNote","Nume"], [idL, idN,nume])
             .then(response => {
-                alert("added");
-                refresh();
+                //alert("added");
+                //refresh();
             })
             .catch(err => {
                 alert("can't be added");
@@ -94,9 +137,13 @@ const AddNote = ({navigation}) => {
     const addNoteFct = () =>{
         if(titlu != '' || text !=''){
             handleAdd();
+            AddAllLabels();
         }
         setText('');
         setTitlu('');
+        setCurrentLabels([]);
+        LastId.refresh();
+        //adaugam si labels in tabel labals for notes
         navigation.navigate("Notes");
     }
     const handleAdd = () => {
@@ -112,20 +159,41 @@ const AddNote = ({navigation}) => {
     }
     
     return (
-        
-        <View style={styles.container}>
+            <View style={styles.container}>
             <TouchableOpacity style={[styles.text,{marginBottom: 20,}]} onPress={()=>addNoteFct()}>
                 <Image 
                     style={{height:20,width:25,marginVertical:10}}
                     source={require('../assets/drawable-hdpi/drawable-xxhdpi/back-arrow.png')}
                 />
             </TouchableOpacity>
+           
             
-                <TextInput multiline  value={titlu} onChangeText={(text) => setTitlu(text)} style={[styles.titlu,{marginBottom:15,}]}  placeholder={'Titlu note'} placeholderTextColor="#fff4" autoFocus={true} />
-            <ScrollView>
-                <TextInput  multiline  value={text} onChangeText={(text) => setText(text)} style={[styles.text,{height:windowHeight-250,textAlignVertical: "top",width: windowWidth-40,}]}  placeholder={'Note'} placeholderTextColor="#fff4"/>
-            </ScrollView>
-            <Modal
+                    <TextInput multiline  value={titlu} onChangeText={(text) => setTitlu(text)} style={[styles.titlu,{marginBottom:15,}]}  placeholder={'Titlu note'} placeholderTextColor="#fff4" autoFocus={true} />
+                <ScrollView>
+                    <TextInput  multiline  value={text} onChangeText={(text) => setText(text)} style={[styles.text,{height:windowHeight-270,textAlignVertical: "top",width: windowWidth-40,}]}  placeholder={'Note'} placeholderTextColor="#fff4"/>
+                </ScrollView>
+                <View style={{marginBottom:60,flexDirection:'row'}}>
+                    <TouchableOpacity onPress={()=>{setModalVisible(!modalVisible);refresh()}}>
+                        <View style={{marginBottom:5,}}>
+                            <Text style={styles.underText}>Add label</Text>
+                        </View>
+
+                    </TouchableOpacity>
+                    <View style={{flexDirection:'row'}}>
+                                <FlatList data={currentLabels} contentContainerStyle={{flexDirection:'row'}} renderItem={ ({item}) =>(
+                                        <View style={{marginLeft:9,borderWidth:1,borderColor:'gray',paddingVertical:2,paddingHorizontal:4,borderRadius:10,flexDirection:'row'}}>
+                                            <Text style={styles.text}>{item.nume}</Text>
+                                            <TouchableOpacity style={{marginLeft:10,}} onPress={()=>RemoveLabel(item.nume)}>
+                                                <Text style={{color:'#BFBFBF'}}>X</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        
+                                    )
+                                    } keyExtractor={item => item.nume.toString()}/>       
+                        </View>
+                </View>
+                
+                <Modal
                     animationType="slide"
                     transparent={true}
                     visible={modalVisible}
@@ -141,7 +209,7 @@ const AddNote = ({navigation}) => {
                         {/* <Text style={styles.text}>Lista cu labels</Text> */}
                         <FlatList data={labelsList} renderItem={ ({item}) =>(
                             <View style={{marginVertical:1,padding:4.5,alignItems:'center'}}>
-                                <TouchableOpacity onPress={()=>AddNewLabel(item.LabelId)}>
+                                <TouchableOpacity onPress={()=>AddNewLabel(item.LabelId,item.Nume)}>
                                     <Text style={styles.text}>{item.Nume}</Text>
                                 </TouchableOpacity>
                             </View>
@@ -149,23 +217,8 @@ const AddNote = ({navigation}) => {
                         }/>
                             
                     </View>
-                </Modal>
-            <TouchableOpacity onPress={()=>{setModalVisible(!modalVisible);refresh()}}>
-                <View style={{marginBottom:65,marginTop:5,}}>
-                    <Text style={styles.underText}>Add label</Text>
-                </View>
-                {/* <FlatList data={labelsList} renderItem={ ({item}) =>(
-                            <View style={{marginVertical:1,padding:4.5,alignItems:'center'}}>
-                                <TouchableOpacity>
-                                    <Text style={styles.text}>{item.Nume}</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )
-                        }/> */}
-            </TouchableOpacity>
+                </Modal>  
         </View>
-        
-
     )
 }
 
@@ -174,13 +227,14 @@ export default AddNote
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
+      //flex: 1,
       backgroundColor: '#0a0a0a',
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
+        //alignItems: 'flex-start',
+      //justifyContent: 'flex-start',
       color: 'white',
       padding:19,
-      minWidth:'100%'
+      minWidth:'100%',
+      //flexDirection:'column'
     },
     text: {
         color: '#f5f5f5',

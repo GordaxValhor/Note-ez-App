@@ -37,7 +37,7 @@ const tableNotes = `create table if not exists Notes(NoteId INTEGER PRIMARY KEY,
 
 const tableLabels = `create table if not exists Labels(LabelId INTEGER PRIMARY KEY, Nume TEXT);`
 
-const tableLabelsForNotes = `create table if not exists LabelsForNotes(Id INTEGER PRIMARY KEY, IdLabel TEXT,IdNote TEXT);`
+const tableLabelsForNotes = `create table if not exists LabelsForNotes(Id INTEGER PRIMARY KEY, IdLabel TEXT, IdNote TEXT,Nume Text);`
 
 //const drop =`DROP TABLE Labels;`
 const Notes = ( {navigation} ) => {
@@ -84,7 +84,7 @@ const Notes = ( {navigation} ) => {
       // ---------------------!!!!!!Aparent asa se face un sqlite trazaction !!!!-----------------------
       db.transaction(tx => {
         tx.executeSql(
-          'DROP TABLE Labels;',
+          'DROP TABLE LabelsForNotes;',
           [],
           (tx, result) => {
             console.log(result)
@@ -116,7 +116,7 @@ const Notes = ( {navigation} ) => {
                 </DBProvider>
             }
             
-            {/* <Button title="erase" onPress={()=>eraseTable()}/> */}
+            <Button title="erase" onPress={()=>eraseTable()}/>
         </View>
     )
     }
