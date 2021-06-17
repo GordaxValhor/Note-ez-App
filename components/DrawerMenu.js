@@ -10,7 +10,7 @@ import {globalStyles} from '../assets/globalStyles/globalStyles'
 
 import { useQuery, useInsert, useUpdate, useDelete } from 'expo-sqlite-hooks/hooks/database';
 
-
+import { useNavigation } from '@react-navigation/native';
 
 
 //pentru icons 
@@ -20,9 +20,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import EditLabel from '../components/EditLabel';
 
 
-const DrawerMenu = () => {
+const DrawerMenu = ({navigation}) => {
 
-
+    //const navigation = useNavigation();
 
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -160,7 +160,7 @@ const DrawerMenu = () => {
                                             data={labelsList}
                                             renderItem={( {item} ) =>(
                                                 <View>
-                                                        <EditLabel item={item} handleUpdate={handleUpdate} handleDelete={handleDelete}/>
+                                                        <EditLabel item={item} handleUpdate={handleUpdate} handleDelete={handleDelete} navigation={navigation}/>
                                                 </View>
                                                 )}
                                         />

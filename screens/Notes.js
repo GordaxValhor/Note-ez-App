@@ -40,8 +40,24 @@ const tableLabels = `create table if not exists Labels(LabelId INTEGER PRIMARY K
 const tableLabelsForNotes = `create table if not exists LabelsForNotes(Id INTEGER PRIMARY KEY, IdLabel TEXT, IdNote TEXT,Nume Text);`
 
 //const drop =`DROP TABLE Labels;`
-const Notes = ( {navigation} ) => {
+const Notes = ( {navigation,route} ) => {
 
+
+
+    // pentru filtru page
+    //const {LabelId} = route.params.item;
+  const [routeLabelId,setRouteLabelId] = useState()
+    
+
+
+
+    useEffect(() => {
+      console.log('route params: ',route.params);
+      //console.log('nav:' ,navigation)
+      if(route.params != undefined)
+      setRouteLabelId(route.params.LabelId)
+      console.log(routeLabelId)
+    },[route])
     //----------------------------
     //use state si use effect pentru refresh
     
@@ -112,11 +128,11 @@ const Notes = ( {navigation} ) => {
                 <Text>Loading DB</Text>
               :
                 <DBProvider db={db}>
-                    <NotesList navigation={navigation} />
+                    <NotesList navigation={navigation} filterLabels={routeLabelId}/>
                 </DBProvider>
             }
             
-            <Button title="erase" onPress={()=>eraseTable()}/>
+            {/* <Button title="erase" onPress={()=>eraseTable()}/> */}
         </View>
     )
     }

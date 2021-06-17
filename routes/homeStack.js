@@ -4,6 +4,7 @@ import { View, Text,Button,TouchableOpacity,Image } from 'react-native'
 import Home from '../screens/Home';
 import Notes from '../screens/Notes';
 import NotePage from '../screens/NotePage';
+import FiltredNotes from '../screens/FiltredNotes';
 
 // petru navigation
 import { NavigationContainer } from '@react-navigation/native';
@@ -28,32 +29,9 @@ const homeStack = () => {
     //------
     // update in baza de date
     
-    const updateNote = useUpdate("Notes");
+    // const updateNote = useUpdate("Notes");
     
     
-
-
-    const handleUpdate = (nume,continut,id) => {
-        //console.log(nume,continut,id);
-        updateNote({column: "Nume", value: nume}, {field: "NoteId", conditional: "=", value: id.toString()})
-        .then(response => {
-            //alert("Pet updated");
-            //refresh();
-        })
-        .catch(err =>{
-            alert("Eroare la updatare notes");
-            console.error(err);
-        })
-        updateNote({column: "TextContinut", value: continut}, {field: "NoteId", conditional: "=", value: id.toString()})
-        .then(response => {
-            //alert("Pet updated");
-            //refresh();
-        })
-        .catch(err =>{
-            alert("Eroare la updatare notes");
-            console.error(err);
-        })
-    }
     
     //pentru drawer navigation
 
@@ -65,16 +43,7 @@ const homeStack = () => {
                 <Stack.Screen name="Notes" options={{header: () => {null}}} component={tabStack} />
                 {/* <Stack.Screen name="" component={Notes}/> */}
                 <Stack.Screen name="NotePage" component={NotePage}
-                options={ ({navigation,route}) =>{ return { headerLeft: () => (
-                    <HeaderBackButton
-                        onPress={() => {
-                            let routeParam = route.params.newParams;
-                            //console.log("params route din homestack",routeParam);
-                            handleUpdate(routeParam.newTitlu,routeParam.newText,routeParam.idNote)
-                            navigation.navigate("Notes");
-                        }} tintColor={'#fff9'}
-                    />
-                    ),
+                options={ ({navigation,route}) =>{ return { 
                     title: '',
                     headerStyle: {
                       backgroundColor: '#0a0a0a',
@@ -84,6 +53,7 @@ const homeStack = () => {
                    
                 }
                 />
+                {/* <Stack.Screen name="FiltredNotes" options={{header: () => {null}}} component={FiltredNotes} /> */}
             </Stack.Navigator>
         
     )

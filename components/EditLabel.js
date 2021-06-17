@@ -5,7 +5,14 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import {globalStyles} from '../assets/globalStyles/globalStyles'
 
-const EditLabel = ({item,handleUpdate,handleDelete}) => {
+
+import { useNavigation } from '@react-navigation/native';
+
+const EditLabel = ({item,handleUpdate,handleDelete,navigation}) => {
+
+
+    
+    //const navigation = useNavigation();
 
     const [showEdit,setShowEdit] = useState(false);
 
@@ -25,11 +32,17 @@ const EditLabel = ({item,handleUpdate,handleDelete}) => {
         handleDelete(item.LabelId);
     }
 
+
+
+    // navigation.navigate('Notes', {screen: 'Notes',params: { user: 'mergelus' },});
     if(showEdit==false){
         return(
-            <View style={styles.stilEditLabel}>
+            <View style={[styles.stilEditLabel,{flexDirection:'row'}]}>
                 <TouchableOpacity onPress={()=>setShowEdit(!showEdit)}>
                     <Text style={styles.underText}>{item.Nume}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {navigation.navigate('Notes', {screen: 'Notes',params: { LabelId: item.LabelId },})}}>
+                    <Text style={[styles.underText,{marginLeft:15,}]}>go page</Text>
                 </TouchableOpacity>
             </View>
         )

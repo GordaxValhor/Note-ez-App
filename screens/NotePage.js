@@ -5,6 +5,8 @@ import {globalStyles} from '../assets/globalStyles/globalStyles';
 
 import { useQuery, useInsert, useUpdate, useDelete } from 'expo-sqlite-hooks/hooks/database';
 
+import { HeaderBackButton } from '@react-navigation/stack';
+
 
 // const navigationOptions = ({navigation}) => {
 //   return{
@@ -22,15 +24,31 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
     //console.log(route.params);
     const [numeNote,setNumeNote] = useState(String(Nume));
     const [textNote,setTextNote] = useState(String(TextContinut));
+
+    // const [currentNumeNote,setCurrentNumeNote] = useState('')
+    // const [currentTextNote,setCurrentTextNote] = useState('')
+
     useEffect(() => {
-        setParams({
-            newParams: {
-                idNote: NoteId,
-                newTitlu: numeNote,
-                newText: textNote,
-            }
-          })
-      }, [numeNote,textNote]);
+        // setParams({
+        //     newParams: {
+        //         idNote: NoteId,
+        //         newTitlu: numeNote,
+        //         newText: textNote,
+        //     }
+        //   })
+          //setCurrentNumeNote(numeNote);
+          //setCurrentTextNote(textNote);
+          //console.log(currentNumeNote)
+          //console.log('ceva');
+
+
+            // if(labelsList != undefined){
+            //     if(labelsList.length > 0 ){
+            //         saveLabelsinDB();
+            //       }
+            // }
+          
+      }, [labelsList]);
 
 
 
@@ -63,10 +81,60 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
                             </TouchableOpacity>
             </View>
           ),
+          headerLeft: () => (
+            <HeaderBackButton
+                onPress={() => {
+                    //console.log("params: ",currentNumeNote,currentTextNote,NoteId);
+
+                    handleUpdate(numeNote,textNote,NoteId);
+                    
+                    setShouldSave(1)
+                    navigation.navigate("Notes");
+                }} tintColor={'#fff9'}
+            />
+            ),
         });
-      }, [navigation, showOptions]);
+      }, [navigation, showOptions,numeNote,textNote,shouldSave]);
     
 
+
+
+      const [shouldSave,setShouldSave] = useState(0);
+
+      useEffect(() => {
+            if(shouldSave == 1){
+                //console.log(labelsList);
+                saveLabelsinDB();
+            }
+      },[shouldSave])
+
+
+      //pentru update for note
+      const updateNote = useUpdate("Notes");
+    
+
+
+    const handleUpdate = (nume,continut,id) => {
+        //console.log('nume: ',nume,'continut: ',continut,'id: ',id);
+        updateNote({column: "Nume", value: nume}, {field: "NoteId", conditional: "=", value: id})
+        .then(response => {
+            //alert("updated");
+            //refresh();
+        })
+        .catch(err =>{
+            alert("Eroare la updatare notes");
+            console.error(err);
+        })
+        updateNote({column: "TextContinut", value: continut}, {field: "NoteId", conditional: "=", value: id})
+        .then(response => {
+            //alert("continut updated");
+            //refresh();
+        })
+        .catch(err =>{
+            alert("Eroare la updatare notes");
+            console.error(err);
+        })
+    }
 
 
 
@@ -125,7 +193,7 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
     
             setLabelsList([...filtramLabels,label])
 
-            console.log('labels list din add label:',labelsList)
+            //console.log('labels list din add label:',labelsList)
     
         }
 
@@ -173,18 +241,18 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
 
 
         const AddAllLabels = () =>{
-            console.log('aici');
+            //console.log('aici');
             labelsList.forEach(item =>{
-                console.log(item);
+                //console.log(item);
                 handleAddLabelForNotes(item.id,NoteId,item.Nume)
             })
         }
 
         const handleAddLabelForNotes = (idL,idN,nume) => {
-            console.log('idl:',idL,'idN ',idN);
+            //console.log('idl:',idL,'idN ',idN);
             insertLabelForNotes(["IdLabel", "IdNote","Nume"], [idL, idN,nume])
             .then(response => {
-                alert("added");
+                //alert("added");
                 //refresh();
             })
             .catch(err => {
@@ -196,7 +264,7 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
         const handleDeleteLabel = () => {
             deleteLabelForNotes({field: "IdNote", conditional: "=", value: NoteId})
                 .then(response => {
-                    alert("deleted");
+                    //alert("deleted");
                     //refresh();
                 })
                 .catch(err =>{
@@ -207,11 +275,11 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
 
       const  saveLabelsinDB = () =>{
 
-        console.log('labels list:',labelsList)
+        //console.log('labels list:',labelsList)
 
         handleDeleteLabel();
                 
-        console.log('labels list:',labelsList)
+        //console.log('labels list:',labelsList)
 
         AddAllLabels();
 
@@ -223,7 +291,7 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
             {
                 showOptions ? (
                 <View style={{position:'absolute',top:0,right:10,borderWidth:1,borderColor:'white',padding:10,borderRadius: 5,backgroundColor:'#0a0a0a',zIndex:1}}>
-                    <TouchableOpacity onPress={() =>{handleDelete(NoteId);navigation.navigate("Notes")}}>
+                    <TouchableOpacity onPress={() =>{handleDeleteLabel();handleDelete(NoteId);navigation.navigate("Notes")}}>
                         <Text style={{color:'white',paddingTop:8}}>Del</Text>
                     </TouchableOpacity>
                     <Text style={{color:'white',paddingTop:8}}>Share</Text>
@@ -243,12 +311,7 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
             */}
             <TouchableOpacity onPress={()=>{setModalVisible(!modalVisible);}}>
                         <View style={{marginBottom:5,}}>
-                            <Text style={styles.underText}>Add new label</Text>
-                        </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>saveLabelsinDB()}>
-                        <View style={{marginBottom:5,}}>
-                            <Text style={styles.underText}>Save in database</Text>
+                            <Text style={styles.underText}>+ Add new label</Text>
                         </View>
             </TouchableOpacity>
             <View style={{flexDirection:'row',}}>

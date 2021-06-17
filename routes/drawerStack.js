@@ -15,16 +15,19 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import DrawerMenu from '../components/DrawerMenu'
 
+import { useNavigation } from '@react-navigation/native';
+
 const drawerStack = () => {
 
 
 
     const Drawer = createDrawerNavigator();
 
+    
 
     return (
         <NavigationContainer >
-            <Drawer.Navigator initialRouteName="Home" drawerContent={() =><DrawerMenu />}>
+            <Drawer.Navigator initialRouteName="Home" drawerContent={({navigation}) =><DrawerMenu navigation={navigation}/>}>
                 <Drawer.Screen name="Home" component={homeStack} />
             </Drawer.Navigator>
         </NavigationContainer>
