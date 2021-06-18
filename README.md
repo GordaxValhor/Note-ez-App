@@ -2,7 +2,7 @@
 react native app with expo
 - using hooks 
 
-Ingredients: 
+Features: 
 - create notes 
 - create tasks
 - share with a team
