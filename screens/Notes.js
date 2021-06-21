@@ -3,13 +3,10 @@ import { View, Text,StyleSheet,TouchableOpacity,FlatList,Button,StatusBar,Scroll
 
 import Header from '../components/header'
 
-import MasonryList from '@appandflow/masonry-list';
-
-
 //importam ce trebe pentru expo sqlite hooks
 import Database from 'expo-sqlite-hooks/database';
 import { DBProvider } from 'expo-sqlite-hooks/context/database';
-
+import * as SQLite from 'expo-sqlite';
 
 import NotesList from '../components/NotesList';
 
@@ -36,37 +33,31 @@ LogBox.ignoreAllLogs();
 // ]
 
 // sql pt creare tabel
-const tableN = `create table if not exists Notes(NoteId INTEGER PRIMARY KEY,Nume TEXT,TextContinut TEXT, Imagini TEXT, Fisiere TEXT, Etichete TEXT, Preferinte TEXT, DataCreare TEXT, UltimaEditare TEXT,Arhiva TEXT);`
+const tableNotes = `create table if not exists Notes(NoteId INTEGER PRIMARY KEY,Nume TEXT,TextContinut TEXT, Imagini TEXT, Fisiere TEXT, Etichete TEXT, Preferinte TEXT, DataCreare TEXT, UltimaEditare TEXT,Arhiva TEXT);`
+
+const tableLabels = `create table if not exists Labels(LabelId INTEGER PRIMARY KEY, Nume TEXT);`
+
+const tableLabelsForNotes = `create table if not exists LabelsForNotes(Id INTEGER PRIMARY KEY, IdLabel TEXT, IdNote TEXT,Nume Text);`
+
+//const drop =`DROP TABLE Labels;`
+const Notes = ( {navigation,route} ) => {
 
 
-const Notes = ( {navigation} ) => {
 
+    // pentru filtru page
+    //const {LabelId} = route.params.item;
+  const [routeLabelId,setRouteLabelId] = useState()
     
 
-    // ca sa modific in lista luam ce parametri din route si schimbam in array
-    // aparent tre sa luam parametri cum am facut si dincolo
-    //console.log(route.params);
-    // const updateNotes = (obj) =>{
-    //     //console.log('aha');
-    //     if(obj.params != undefined) {
-    //         console.log('obj din fuct update notes',obj.params.params.nume);
-    //         console.log('obiecte:',obiecte[3][0].nume)
-    //         for(let i=0;i<=obiecte.length;i++){
-    //             // if(obiecte[i].nume == obj.params.params.nume){
-    //             //     obiecte[i].nume = obj.params.params.params.post;
-    //             // }
-    //         }
 
-    //     }
-        
-    // }
 
-    // useEffect(() => {
-    //     console.log("date din notes:",dateNote)
-    //     if(dateNote != undefined)
-    //     {updateNotes(dateNote);}
-    //   }, [dateNote]);
-
+    useEffect(() => {
+      //console.log('route params: ',route.params);
+      //console.log('nav:' ,navigation)
+      if(route.params != undefined)
+        setRouteLabelId(route.params.LabelId)
+      //console.log(routeLabelId)
+    },[route,navigation])
     //----------------------------
     //use state si use effect pentru refresh
     
@@ -78,7 +69,7 @@ const Notes = ( {navigation} ) => {
     useEffect(() => {
       // Initialize the database
       const db = new Database("Note-ez-app-DB-try", "1.0");
-      db.createTables([tableN])
+      db.createTables([tableNotes,tableLabels,tableLabelsForNotes])
       .then(response => {
         setDB(db);
       })
@@ -97,6 +88,31 @@ const Notes = ( {navigation} ) => {
      //facem un state pentru refresh pe care o sa il trimitem la notelist 
      //in note list facem un useeffect ca sa putem da refresh in functie de propul refresh primit din notes
 
+
+
+
+     // functi pt debugging
+
+     const eraseTable = () =>{
+      let db = SQLite.openDatabase("Note-ez-app-DB-try1.0");
+      //console.log(db)
+
+      // ---------------------!!!!!!Aparent asa se face un sqlite trazaction !!!!-----------------------
+      db.transaction(tx => {
+        tx.executeSql(
+          'DROP TABLE LabelsForNotes;',
+          [],
+          (tx, result) => {
+            console.log(result)
+          },
+          (tx, error) => {
+            console.log(error);
+          }
+        );
+      });
+     }
+
+
     return (
         <View style={styles.container}>
 
@@ -105,18 +121,18 @@ const Notes = ( {navigation} ) => {
                 backgroundColor="#0a0a0a"
             />
             <View style={{justifyContent:'center',alignItems:'center',marginBottom:17}}>
-                <Header />
+                <Header  navigation={navigation}/>
             </View>
             {
                 db === null ? 
                 <Text>Loading DB</Text>
               :
                 <DBProvider db={db}>
-                    <NotesList navigation={navigation} />
+                    <NotesList navigation={navigation} filterLabels={routeLabelId} route={route}/>
                 </DBProvider>
             }
             
-            {/* <Button title="vezi 2" onPress={console.log("din notes",dateNote)}/> */}
+            {/* <Button title="erase" onPress={()=>eraseTable()}/> */}
         </View>
     )
     }

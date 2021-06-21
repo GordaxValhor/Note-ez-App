@@ -6,8 +6,8 @@ export const globalStyles = StyleSheet.create({
       flex: 1,
       flexDirection: 'column',
       //backgroundColor: '#1f1f1f',
-      alignItems: 'center',
-      justifyContent: 'center',
+      //alignItems: 'center',
+      //justifyContent: 'center',
       color: 'white',
     },
     text: {
