@@ -50,6 +50,7 @@ const DrawerMenu = ({navigation}) => {
     const [numeLabel,setNumeLabel] = useState('')
     const insertLabel = useInsert("Labels");
     const updateLabel = useUpdate("Labels");
+    const updateLabelForNotes = useUpdate("LabelsForNotes");
     const deleteLabel = useDelete("Labels");
 
     const addLabel = () =>{
@@ -72,10 +73,19 @@ const DrawerMenu = ({navigation}) => {
     //pentru editare si stergere labels
 
 
-    const handleUpdate = (newNume,id) => {
+    const handleUpdate = (newNume,id,oldNume) => {
         updateLabel({column: "Nume", value: newNume}, {field: "LabelId", conditional: "=", value: id})
         .then(response => {
             //alert("Label update succ");
+            refresh();
+        })
+        .catch(err =>{
+            //alert("esec");
+            console.error(err);
+        })
+        updateLabelForNotes({column: "Nume", value: newNume}, {field: "Nume", conditional: "=", value: oldNume})
+        .then(response => {
+            //alert("Label for notes update succ");
             refresh();
         })
         .catch(err =>{
@@ -118,7 +128,7 @@ const DrawerMenu = ({navigation}) => {
                         </TouchableOpacity>
                             <View style={{margin:15,padding:5,alignItems:'center'}}>
                                 {/* <Text style={globalStyles.text}>Adauga un label nou</Text> */}
-                                <TextInput onChangeText={(text)=>setNumeLabel(text)} placeholderTextColor="#fff4" style={globalStyles.text} placeholder='Adauga un label nou'></TextInput>
+                                <TextInput textAlign={'center'} onChangeText={(text)=>setNumeLabel(text)} placeholderTextColor="#fff4" style={globalStyles.text} placeholder='Adauga un label nou'></TextInput>
                             </View>
                         <TouchableOpacity onPress={()=> addLabel()}>
                             <Text style={globalStyles.text}>Add</Text>

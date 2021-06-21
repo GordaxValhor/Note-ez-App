@@ -4,6 +4,7 @@ import { View, Text, StyleSheet,Image,ScrollView,TouchableOpacity,Modal,TextInpu
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import {globalStyles} from '../assets/globalStyles/globalStyles'
+import { AntDesign } from '@expo/vector-icons';
 
 
 import { useNavigation } from '@react-navigation/native';
@@ -25,7 +26,7 @@ const EditLabel = ({item,handleUpdate,handleDelete,navigation}) => {
 
     const updateLabel = () =>{
         setShowEdit(!showEdit);
-        handleUpdate(newNumeLabel,item.LabelId);
+        handleUpdate(newNumeLabel,item.LabelId,item.Nume);
     }
     const deleteLabel = () =>{
         setShowEdit(!showEdit);
@@ -37,12 +38,12 @@ const EditLabel = ({item,handleUpdate,handleDelete,navigation}) => {
     // navigation.navigate('Notes', {screen: 'Notes',params: { user: 'mergelus' },});
     if(showEdit==false){
         return(
-            <View style={[styles.stilEditLabel,{flexDirection:'row'}]}>
+            <View style={[styles.stilEditLabel,{flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}]}>
                 <TouchableOpacity onPress={()=>setShowEdit(!showEdit)}>
-                    <Text style={styles.underText}>{item.Nume}</Text>
+                    <Text numberOfLines={1} style={[styles.underText,{width:150,}]}>{item.Nume}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {navigation.navigate('Notes', {screen: 'Notes',params: { LabelId: item.LabelId },})}}>
-                    <Text style={[styles.underText,{marginLeft:15,}]}>go page</Text>
+                    <AntDesign name="arrowright" size={24} color="gray" />
                 </TouchableOpacity>
             </View>
         )
@@ -53,7 +54,7 @@ const EditLabel = ({item,handleUpdate,handleDelete,navigation}) => {
                     <TouchableOpacity onPress={()=>deleteLabel()}>
                         <MaterialIcons name="delete-outline" size={24} color="#F2F2F2" />
                     </TouchableOpacity>
-                    <TextInput onChangeText={(text)=>setNewNumeLabel(text)}  placeholderTextColor="#fff4" style={[styles.textMic,{marginBottom:15,}]} value={newNumeLabel}></TextInput>
+                    <TextInput textAlign={'center'} multiline onChangeText={(text)=>setNewNumeLabel(text)}  placeholderTextColor="#fff4" style={[styles.textMic,{marginBottom:15,width:'60%'}]} value={newNumeLabel}></TextInput>
                     <TouchableOpacity onPress={()=>updateLabel()}>
                          <Feather name="check" size={24} color="#F2F2F2" />
                     </TouchableOpacity> 

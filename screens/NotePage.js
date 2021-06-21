@@ -185,7 +185,7 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
         const AddNewLabel = (idL,nume) =>{ 
             var label = {
                 Nume: nume,
-                id: idL,
+                IdLabel: idL,
             }
             //pentru verificare label daca exista deja
     
@@ -244,13 +244,13 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
             //console.log('aici');
             labelsList.forEach(item =>{
                 //console.log(item);
-                handleAddLabelForNotes(item.id,NoteId,item.Nume)
+                handleAddLabelForNotes(item.IdLabel,NoteId,item.Nume)
             })
         }
 
         const handleAddLabelForNotes = (idL,idN,nume) => {
-            //console.log('idl:',idL,'idN ',idN);
-            insertLabelForNotes(["IdLabel", "IdNote","Nume"], [idL, idN,nume])
+            console.log('idl:',idL,'idN ',idN);
+            insertLabelForNotes(["IdLabel", "IdNote","Nume"], [idL,idN,nume])
             .then(response => {
                 //alert("added");
                 //refresh();

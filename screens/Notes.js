@@ -52,12 +52,12 @@ const Notes = ( {navigation,route} ) => {
 
 
     useEffect(() => {
-      console.log('route params: ',route.params);
+      //console.log('route params: ',route.params);
       //console.log('nav:' ,navigation)
       if(route.params != undefined)
-      setRouteLabelId(route.params.LabelId)
-      console.log(routeLabelId)
-    },[route])
+        setRouteLabelId(route.params.LabelId)
+      //console.log(routeLabelId)
+    },[route,navigation])
     //----------------------------
     //use state si use effect pentru refresh
     
@@ -128,7 +128,7 @@ const Notes = ( {navigation,route} ) => {
                 <Text>Loading DB</Text>
               :
                 <DBProvider db={db}>
-                    <NotesList navigation={navigation} filterLabels={routeLabelId}/>
+                    <NotesList navigation={navigation} filterLabels={routeLabelId} route={route}/>
                 </DBProvider>
             }
             
