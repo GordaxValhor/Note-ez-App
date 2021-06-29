@@ -1,5 +1,5 @@
 import React ,{ useState,useEffect } from 'react'
-import { View,StyleSheet, Text,TextInput,Button,Image,TouchableOpacity,FlatList,Modal } from 'react-native'
+import { View,StyleSheet, Text,TextInput,Button,Image,TouchableOpacity,FlatList,Modal, ScrollView } from 'react-native'
 import { useWindowDimensions } from 'react-native';
 import {globalStyles} from '../assets/globalStyles/globalStyles';
 
@@ -104,7 +104,9 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
       useEffect(() => {
             if(shouldSave == 1){
                 //console.log(labelsList);
-                saveLabelsinDB();
+                if(labelsList != undefined){
+                    saveLabelsinDB();
+                }
             }
       },[shouldSave])
 
@@ -301,7 +303,7 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
             }
             
             <TextInput multiline value={numeNote} style={[styles.titlu,{marginBottom:15,width: windowWidth-20,}]} onChangeText={text => setNumeNote(text)}  placeholder={'Titlu note'} placeholderTextColor="#fff4"/>
-            <TextInput multiline value={textNote} style={[styles.text,{height:'85%',textAlignVertical: "top",width: windowWidth-20,}]} onChangeText={text=>setTextNote(text)} placeholder={'Note'} placeholderTextColor="#fff4"/>
+            <TextInput multiline value={textNote} style={[styles.text,{height:'85%',textAlignVertical: "top",width: windowWidth-20,marginBottom:10}]} onChangeText={text=>setTextNote(text)} placeholder={'Note'} placeholderTextColor="#fff4"/>
             {/* <Text>indexu:{index}</Text> */}
             {/* 
             o sa avem partea cu labels 
@@ -314,7 +316,8 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
                             <Text style={styles.underText}>+ Add new label</Text>
                         </View>
             </TouchableOpacity>
-            <View style={{flexDirection:'row',}}>
+            <ScrollView horizontal>
+            <View style={{flexDirection:'row',marginRight:5}}>
                                 <FlatList data={labelsList} contentContainerStyle={{flexDirection:'row'}} renderItem={ ({item}) =>(
                                         <View style={{marginLeft:9,borderWidth:1,borderColor:'gray',paddingVertical:2,paddingHorizontal:4,borderRadius:10,flexDirection:'row'}}>
                                             <Text style={styles.text}>{item.Nume}</Text>
@@ -326,6 +329,7 @@ const NotePage = ( { navigation: { setParams } ,route,navigation} ) => {
                                     )
                                     } keyExtractor={item => item.id}/>       
             </View>
+            </ScrollView>
             <Modal
                     animationType="slide"
                     transparent={true}

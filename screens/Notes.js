@@ -39,6 +39,8 @@ const tableLabels = `create table if not exists Labels(LabelId INTEGER PRIMARY K
 
 const tableLabelsForNotes = `create table if not exists LabelsForNotes(Id INTEGER PRIMARY KEY, IdLabel TEXT, IdNote TEXT,Nume Text);`
 
+const tableTask = `create table if not exists Tasks(Id INTEGER PRIMARY KEY, Nume TEXT, SubTask TEXT);` //mai tre sa pun si partea date-istorice si temporala
+
 //const drop =`DROP TABLE Labels;`
 const Notes = ( {navigation,route} ) => {
 
@@ -69,7 +71,7 @@ const Notes = ( {navigation,route} ) => {
     useEffect(() => {
       // Initialize the database
       const db = new Database("Note-ez-app-DB-try", "1.0");
-      db.createTables([tableNotes,tableLabels,tableLabelsForNotes])
+      db.createTables([tableNotes,tableLabels,tableLabelsForNotes,tableTask])
       .then(response => {
         setDB(db);
       })
@@ -100,7 +102,7 @@ const Notes = ( {navigation,route} ) => {
       // ---------------------!!!!!!Aparent asa se face un sqlite trazaction !!!!-----------------------
       db.transaction(tx => {
         tx.executeSql(
-          'DROP TABLE LabelsForNotes;',
+          'DROP TABLE Tasks;',
           [],
           (tx, result) => {
             console.log(result)
@@ -113,6 +115,15 @@ const Notes = ( {navigation,route} ) => {
      }
 
 
+
+     // pentru filter
+
+     const [filterSearch,setFilterSearch] = useState(null);
+
+
+     const filterFct = (text) =>{
+          setFilterSearch(text)
+     }
     return (
         <View style={styles.container}>
 
@@ -121,14 +132,14 @@ const Notes = ( {navigation,route} ) => {
                 backgroundColor="#0a0a0a"
             />
             <View style={{justifyContent:'center',alignItems:'center',marginBottom:17}}>
-                <Header  navigation={navigation}/>
+                <Header  navigation={navigation} filterFct={filterFct} filter={filterSearch}/>
             </View>
             {
                 db === null ? 
                 <Text>Loading DB</Text>
               :
                 <DBProvider db={db}>
-                    <NotesList navigation={navigation} filterLabels={routeLabelId} route={route}/>
+                    <NotesList navigation={navigation} filterLabels={routeLabelId} route={route} filter={filterSearch}/>
                 </DBProvider>
             }
             

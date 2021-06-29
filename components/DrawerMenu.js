@@ -52,6 +52,7 @@ const DrawerMenu = ({navigation}) => {
     const updateLabel = useUpdate("Labels");
     const updateLabelForNotes = useUpdate("LabelsForNotes");
     const deleteLabel = useDelete("Labels");
+    const deleteLabelForNotes = useDelete("LabelsForNotes");
 
     const addLabel = () =>{
         handleAdd();
@@ -104,6 +105,15 @@ const DrawerMenu = ({navigation}) => {
             //alert("label can't be deleted");
             console.error(err);
         })
+        deleteLabelForNotes({field: "IdLabel", conditional: "=", value: id})
+        .then(response => {
+            //alert("Label deleted");
+            refresh();
+        })
+        .catch(err =>{
+            //alert("label can't be deleted");
+            console.error(err);
+        })
     }
    
 
@@ -120,7 +130,7 @@ const DrawerMenu = ({navigation}) => {
                     onRequestClose={() => {
                         setModalVisible(!modalVisible);
                     }}>
-                    <View style={[styles.modalStyle,{top:'35%',left:'25%'}]}>
+                    <View style={[styles.modalStyle,{top:'35%',left:'15%'}]}>
                         <TouchableOpacity onPress={()=> setModalVisible(!modalVisible)}>
                             <View style={{marginLeft:'90%'}}>
                             <Text style={[globalStyles.text]}>X</Text>
@@ -144,7 +154,9 @@ const DrawerMenu = ({navigation}) => {
                 <View style={{marginTop:20, width:'100%',padding:10,}}>
                     <Text style={styles.titlu}>Account</Text>
                     <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-around',}}>
-                        <Text style={globalStyles.text}>Nume cont</Text>
+                        <TouchableOpacity onPress={() => {navigation.navigate('LogIn')}}>
+                            <Text style={globalStyles.text}>Nume cont</Text>
+                        </TouchableOpacity>
                         <View style={{width:50,height:50,borderWidth:1,borderRadius:50,borderColor:'gray'}}></View>
                     </View>
                 </View>

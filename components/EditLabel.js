@@ -38,12 +38,12 @@ const EditLabel = ({item,handleUpdate,handleDelete,navigation}) => {
     // navigation.navigate('Notes', {screen: 'Notes',params: { user: 'mergelus' },});
     if(showEdit==false){
         return(
-            <View style={[styles.stilEditLabel,{flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}]}>
+            <View style={[styles.stilEditLabel,{flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between',alignItems:'center'}]}>
                 <TouchableOpacity onPress={()=>setShowEdit(!showEdit)}>
                     <Text numberOfLines={1} style={[styles.underText,{width:150,}]}>{item.Nume}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {navigation.navigate('Notes', {screen: 'Notes',params: { LabelId: item.LabelId },})}}>
-                    <AntDesign name="arrowright" size={24} color="gray" />
+                    <AntDesign name="arrowright" size={20} color="gray" />
                 </TouchableOpacity>
             </View>
         )

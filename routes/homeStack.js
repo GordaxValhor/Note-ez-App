@@ -4,6 +4,7 @@ import { View, Text,Button,TouchableOpacity,Image } from 'react-native'
 import Home from '../screens/Home';
 import Notes from '../screens/Notes';
 import NotePage from '../screens/NotePage';
+import TaskPage from '../screens/TaskPage';
 import FiltredNotes from '../screens/FiltredNotes';
 
 // petru navigation
@@ -54,6 +55,14 @@ const homeStack = () => {
                 }
                 />
                 {/* <Stack.Screen name="FiltredNotes" options={{header: () => {null}}} component={FiltredNotes} /> */}
+                <Stack.Screen name="TaskPage" component={TaskPage}
+                options={ ({navigation,route}) =>{ return { 
+                    title: '',
+                    headerStyle: {
+                      backgroundColor: '#0a0a0a',
+                    },
+                    }
+                }}/>
             </Stack.Navigator>
         
     )

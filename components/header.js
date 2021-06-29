@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text ,TextInput,StyleSheet,Image,TouchableOpacity} from 'react-native'
 
-const Header = ({navigation}) => {
+const Header = ({navigation, filterFct,filter}) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -14,7 +14,7 @@ const Header = ({navigation}) => {
                 style={{height:30,width:80,}}
                 source={require('../assets/drawable-mdpi/grp25.png')}
             />
-            <TextInput style={styles.input} placeholderTextColor="#5A5A5A" placeholder={'Search for notes'}/>
+            <TextInput style={styles.input} onChangeText={(text)=> {filterFct(text)}} value={filter} placeholderTextColor="#5A5A5A" placeholder={'Search for notes'}/>
         </View>
     )
 }

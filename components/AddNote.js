@@ -3,6 +3,9 @@ import { View,StyleSheet, Text,TextInput,TouchableOpacity,Image,ScrollView,FlatL
 import { useWindowDimensions } from 'react-native';
 import {globalStyles} from '../assets/globalStyles/globalStyles';
 
+import { Ionicons } from '@expo/vector-icons';
+
+
 //importuri pt db work
 import { useQuery, useInsert, useUpdate, useDelete } from 'expo-sqlite-hooks/hooks/database';
 
@@ -153,7 +156,7 @@ const AddNote = ({navigation}) => {
             //refresh();
         })
         .catch(err => {
-            alert("eroare la adaugare notes");
+            alert("eroare la adaugare notes",err);
             console.error(err);
         })
     }
@@ -161,13 +164,12 @@ const AddNote = ({navigation}) => {
     return (
             <View style={styles.container}>
             <TouchableOpacity style={[styles.text,{marginBottom: 20,}]} onPress={()=>addNoteFct()}>
-                <Image 
+                {/* <Image 
                     style={{height:20,width:25,marginVertical:10}}
                     source={require('../assets/drawable-hdpi/drawable-xxhdpi/back-arrow.png')}
-                />
+                /> */}
+                <Ionicons name="arrow-back" size={24} color="gray" />
             </TouchableOpacity>
-           
-            
                     <TextInput multiline  value={titlu} onChangeText={(text) => setTitlu(text)} style={[styles.titlu,{marginBottom:15,}]}  placeholder={'Titlu note'} placeholderTextColor="#fff4" autoFocus={true} />
                 <ScrollView>
                     <TextInput  multiline  value={text} onChangeText={(text) => setText(text)} style={[styles.text,{height:windowHeight-270,textAlignVertical: "top",width: windowWidth-40,}]}  placeholder={'Note'} placeholderTextColor="#fff4"/>

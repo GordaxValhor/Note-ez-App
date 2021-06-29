@@ -50,7 +50,7 @@ const Add = ({addWhat}) => {
     return (
         <View style={styles.container}>
                 <View>
-                        {ceScreen == 'notes' ? <DBProvider db={db}><AddNote navigation={navigation}/></DBProvider> : <AddTask />}
+                        {ceScreen == 'notes' ? <DBProvider db={db}><AddNote navigation={navigation}/></DBProvider> : <AddTask navigation={navigation}/>}
                 </View>
         </View>
     )

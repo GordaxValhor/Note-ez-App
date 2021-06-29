@@ -10,7 +10,7 @@ import LabelListNote from './LabelListNote';
 
 
 
-const NotesList = ({navigation,filterLabels,route}) => {
+const NotesList = ({navigation,filterLabels,route,filter}) => {
 
     //const navigation = useNavigation();
 
@@ -53,8 +53,9 @@ const NotesList = ({navigation,filterLabels,route}) => {
         
         console.log('filter label din note list: ',filterLabels);
         if(filterLabels != undefined){
+            console.log('show filter',showFilteredList)
             filterNotesForCurrentLabel();
-            //setShowFilteredList(1);
+            setShowFilteredList(1);
         }
         else {
             setShowFilteredList(0);
@@ -99,12 +100,73 @@ const NotesList = ({navigation,filterLabels,route}) => {
     const [filteredNotes,setFilteredNotes] = useState()
     const [showFilteredList,setShowFilteredList] = useState(0);
 
+
+    //-------------------------------
+    //pentru filtru din search
+
+    useEffect(()=>{
+
+        //console.log('filter din search',filter);
+        if(showFilteredList != 1){
+            searchFilterFunction(filter);
+        }
+
+        // searchFilterFunction(filter);
+        //console.log(filteredData);
+
+    },[filter,filteredData,data])
+
+    const [filteredData,setFilteredData] = useState()
+    const searchFilterFunction = (text) => {
+        // Check if searched text is not blank
+        if (text) {
+          // Inserted text is not blank
+          // Filter the masterDataSource and update FilteredDataSource
+        
+          let notesDataAux = Notes;
+         
+          
+          const newData = notesDataAux.filter(
+            function (item) {
+              // Applying filter for the inserted text in search bar
+              const itemData = item.Nume
+                  ? item.Nume.toUpperCase()
+                  : ''.toUpperCase();
+              const textData = text.toUpperCase();
+              return itemData.indexOf(textData) > -1;
+            }
+          );
+          setFilteredData(newData);
+          setShowFilteredList(2)
+          //setNotes(newData);
+          //setSearch(text);
+
+        } else {
+          // Inserted text is blank
+          // Update FilteredDataSource with masterDataSource
+        //   if(showFilteredList != 1){
+        //     setFilteredData(Notes);
+        //     setShowFilteredList(0);
+        //   }
+
+          setFilteredData(Notes);
+          setShowFilteredList(0);
+
+          //setSearch(text);
+        }
+      };
+
+
+
+      // 1 cazul cu filtre labels
+      // 0  normal
+      // 2 filtru search
     if(showFilteredList == 1){
         return (
         <View style={styles.container}>
                 <View style={{marginTop:50,marginLeft:10,marginBottom:10,}}>
                     <TouchableOpacity onPress={()=> {setShowFilteredList(0);}}>
-                        <Text style={styles.underText}>{`<`}Go Back to NOTES</Text>
+                        <Text style={styles.underText}>{`<`} Go Back to NOTES</Text>
                     </TouchableOpacity>
                 </View>
                 <ScrollView>
@@ -140,7 +202,7 @@ const NotesList = ({navigation,filterLabels,route}) => {
 
         )
     }
-    else {
+    else if(showFilteredList == 0) {
         return (
             <ScrollView>
                     <View style={{height:50}}></View>
@@ -160,6 +222,48 @@ const NotesList = ({navigation,filterLabels,route}) => {
                                 />
                                 <FlatList 
                                     data={Notes.filter((_,i)=>i% 2 !== 0)}
+                                    renderItem={( {item} ) =>(
+                                        <View>
+                                        <TouchableOpacity style={styles.noteStyle} onPress={()=>{navigation.navigate('NotePage',item)}}>
+                                            <Text style={styles.title}>{item.Nume}</Text>
+                                            <Text numberOfLines={20}style={styles.text}>{item.TextContinut} </Text>
+                                            {/* <Text style={styles.text}>{item.NoteId} </Text> */}
+                                            <View styles={{flexDirection:'row',flex:1,}}>
+                                            <LabelListNote labelsList={allLabelsId} NoteId={item.NoteId}/>
+                                            </View>
+                                        </TouchableOpacity>
+                                        
+                                        
+                                        </View>
+                                        )
+                                    }
+                                />
+                            </View>
+                            <View style={{height:100}}></View>
+                        </ScrollView>
+            </ScrollView>
+        )
+    }
+    else if(showFilteredList == 2) {
+        return (
+            <ScrollView>
+                    <View style={{height:50}}></View>
+                    {/* <Button title='Apasa' onPress={()=> filterNotesForCurrentLabel()}></Button> */}
+                        <ScrollView >
+                            <View style={{flex:1,flexDirection:'row',margin:0}}>
+                                <FlatList 
+                                    data={filteredData.filter((_,i)=>i% 2 == 0)}
+                                    renderItem={( {item} ) =>(
+                                        <TouchableOpacity style={styles.noteStyle} onPress={()=>{navigation.navigate('NotePage',item)}}>
+                                            <Text style={styles.title}>{item.Nume}</Text>
+                                            <Text numberOfLines={20}style={styles.text}>{item.TextContinut} </Text>
+                                            {/* <Text style={styles.text}>{item.NoteId} </Text> */}
+                                            <LabelListNote labelsList={allLabelsId} NoteId={item.NoteId}/>
+
+                                        </TouchableOpacity>)}
+                                />
+                                <FlatList 
+                                    data={filteredData.filter((_,i)=>i% 2 !== 0)}
                                     renderItem={( {item} ) =>(
                                         <View>
                                         <TouchableOpacity style={styles.noteStyle} onPress={()=>{navigation.navigate('NotePage',item)}}>
@@ -218,7 +322,7 @@ const styles = StyleSheet.create({
     noteStyle: {
         //flex: 1,
         flexDirection:'column',
-        minWidth: 165,
+        minWidth: 185,
         maxWidth: 185,
         minHeight: 70,
         maxHeight: 500,

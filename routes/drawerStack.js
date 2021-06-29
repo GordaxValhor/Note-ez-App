@@ -10,10 +10,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator,HeaderBackButton } from '@react-navigation/stack';
 import tabStack from './tabStack';
 import homeStack from './homeStack';
+import logInStack from './logInStack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 
 import DrawerMenu from '../components/DrawerMenu'
+
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -29,6 +31,7 @@ const drawerStack = () => {
         <NavigationContainer >
             <Drawer.Navigator initialRouteName="Home" drawerContent={({navigation}) =><DrawerMenu navigation={navigation}/>}>
                 <Drawer.Screen name="Home" component={homeStack} />
+                <Drawer.Screen name="LogIn" component={logInStack} />
             </Drawer.Navigator>
         </NavigationContainer>
     )
