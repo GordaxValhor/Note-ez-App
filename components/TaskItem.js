@@ -75,7 +75,7 @@ const TaskItem = ({item, modifyComplete, modifyNumeTask, addNewTask,index,remove
             
             
             
-            <TextInput multiline maxLength={120} ref={input} blurOnSubmit onSubmitEditing={() =>addNewTask(index + 1)} onChangeText={(text)=>{setNumeTask(text)}}  style={[{width:'85%',marginBottom:15,marginLeft:5,},isChecked? styles.checkedText : styles.text]} value={numeTask}  placeholder={'New task'} placeholderTextColor="#fff4" autoCorrect={false} spellCheck={false}/>
+            <TextInput multiline maxLength={120} ref={input} blurOnSubmit onSubmitEditing={() =>addNewTask(index + 1)} onChangeText={(text)=>{setNumeTask(text)}}  style={[{width:'85%',marginBottom:15,marginLeft:5,},isChecked? styles.checkedText : styles.text]} value={numeTask}  placeholder={'New task'} placeholderTextColor="#fff9" autoCorrect={false} spellCheck={false}/>
             
                 <TouchableOpacity onPress={()=>removeSubtaskElement(item.id)}>
                     <Feather name="x" size={24} color="gray" />

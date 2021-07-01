@@ -19,15 +19,38 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import EditLabel from '../components/EditLabel';
 
+import UserContext from '../components/UserContext';
+
 
 const DrawerMenu = ({navigation}) => {
 
     //const navigation = useNavigation();
 
 
+
+
+
+    // pentru cont
+
+    const user = React.useContext(UserContext);
+
+    // const [userData,setUserData] = useState();
+    // useEffect(() => {
+    //     //Get all pets in the query
+       
+    //     //refresh();
+    //     console.log('din drawer menu,',user)
+    //     if(user.user != undefined){
+    //         setUserData(user.user);
+    //     }
+
+    // }, [user]);
+
+
     const [modalVisible, setModalVisible] = useState(false);
 
     //inserare in baza de data a labels
+
     const {loading, error, data, refresh} = useQuery("select * from Labels Order by LabelId desc", []);
 
     const [labelsList,setLabelsList] = useState();
@@ -154,10 +177,25 @@ const DrawerMenu = ({navigation}) => {
                 <View style={{marginTop:20, width:'100%',padding:10,}}>
                     <Text style={styles.titlu}>Account</Text>
                     <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-around',}}>
-                        <TouchableOpacity onPress={() => {navigation.navigate('LogIn')}}>
-                            <Text style={globalStyles.text}>Nume cont</Text>
-                        </TouchableOpacity>
-                        <View style={{width:50,height:50,borderWidth:1,borderRadius:50,borderColor:'gray'}}></View>
+                        {
+                            user.user?
+                            <TouchableOpacity onPress={() => {navigation.navigate('Account')}}>
+                                <Text style={globalStyles.text}>{user.user.displayName}</Text>
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity onPress={() => {navigation.navigate('LogIn')}}>
+                                <Text style={globalStyles.text}>Log-in</Text>
+                            </TouchableOpacity>
+                        }
+                        {
+                            user.user?
+                            <TouchableOpacity onPress={() => {navigation.navigate('Account')}}>
+                                <Image  style={{width:50,height:50,borderWidth:1,borderRadius:50, borderColor:'white',}} source={{uri:user.user.photoURL}}/>
+                            </TouchableOpacity>
+                            :
+                            null
+                        }
+                        {/* <View style={{width:50,height:50,borderWidth:1,borderRadius:50,borderColor:'gray'}}></View> */}
                     </View>
                 </View>
                 <ScrollView style={{marginTop:20,flex:1}}>

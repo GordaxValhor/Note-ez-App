@@ -168,11 +168,11 @@ const AddNote = ({navigation}) => {
                     style={{height:20,width:25,marginVertical:10}}
                     source={require('../assets/drawable-hdpi/drawable-xxhdpi/back-arrow.png')}
                 /> */}
-                <Ionicons name="arrow-back" size={24} color="gray" />
+                <Ionicons name="arrow-back" size={24} color="#fff9" />
             </TouchableOpacity>
-                    <TextInput multiline  value={titlu} onChangeText={(text) => setTitlu(text)} style={[styles.titlu,{marginBottom:15,}]}  placeholder={'Titlu note'} placeholderTextColor="#fff4" autoFocus={true} />
+                    <TextInput multiline  value={titlu} onChangeText={(text) => setTitlu(text)} style={[styles.titlu,{marginBottom:15,}]}  placeholder={'Titlu note'} placeholderTextColor="#fff9" autoFocus={true} />
                 <ScrollView>
-                    <TextInput  multiline  value={text} onChangeText={(text) => setText(text)} style={[styles.text,{height:windowHeight-270,textAlignVertical: "top",width: windowWidth-40,}]}  placeholder={'Note'} placeholderTextColor="#fff4"/>
+                    <TextInput  multiline  value={text} onChangeText={(text) => setText(text)} style={[styles.text,{height:windowHeight-270,textAlignVertical: "top",width: windowWidth-40,}]}  placeholder={'Note'} placeholderTextColor="#fff9"/>
                 </ScrollView>
                 <View style={{marginBottom:60,flexDirection:'row'}}>
                     <TouchableOpacity onPress={()=>{setModalVisible(!modalVisible);refresh()}}>

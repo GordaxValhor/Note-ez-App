@@ -118,9 +118,9 @@ const AddTask = ({navigation}) => {
                     style={{height:20,width:25,marginVertical:10}}
                     source={require('../assets/drawable-hdpi/drawable-xxhdpi/back-arrow.png')}
                 /> */}
-                <Ionicons name="arrow-back" size={24} color="gray" />
+                <Ionicons name="arrow-back" size={24} color="#fff9" />
             </TouchableOpacity>
-                <TextInput value={numeTask} onChangeText={(text)=> setNumeTask(text)} multiline style={[styles.titlu,{marginBottom:15,}]}  placeholder={'Titlu task'} placeholderTextColor="#fff4" autoCorrect={false} spellCheck={false}/>
+                <TextInput value={numeTask} onChangeText={(text)=> setNumeTask(text)} multiline style={[styles.titlu,{marginBottom:15,}]}  placeholder={'Titlu task'} placeholderTextColor="#fff9" autoCorrect={false} spellCheck={false}/>
                 
                 {/* aici o sa avem un flat list care o sa ne arate toata lista de task-uri */}
                         <View style={{flex:1}}>

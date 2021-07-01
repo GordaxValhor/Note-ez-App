@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
         paddingTop:7,
         //flexWrap: 'wrap',
         backgroundColor: '#0a0a0a',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         //justifyContent: 'center',
         color: 'white',
 
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     },
     taskStyle: {
         flex: 1,
-        //flexDirection:'row',
+        flexDirection:'column',
         minWidth: 185,
         maxWidth: 185,
         minHeight: 80,
