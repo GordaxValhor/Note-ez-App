@@ -4,6 +4,7 @@ import { createStackNavigator,HeaderBackButton } from '@react-navigation/stack';
 
 import LogIn from '../screens/LogIn'
 import Account from '../screens/Account';
+import SignUp from '../screens/SignUp';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,17 @@ const logInStack = () => {
                 }
                 />
                 <Stack.Screen name="Account" component={Account}
+                options={ ({navigation,route}) =>{ return { 
+                    title: '',
+                    headerStyle: {
+                      backgroundColor: '#0a0a0a',
+                    },
+                    }
+                }
+                   
+                }
+                />
+                <Stack.Screen name="SignUp" component={SignUp}
                 options={ ({navigation,route}) =>{ return { 
                     title: '',
                     headerStyle: {

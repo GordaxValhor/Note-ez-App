@@ -201,7 +201,9 @@ const DrawerMenu = ({navigation}) => {
                 <ScrollView style={{marginTop:20,flex:1}}>
                     <View>
                         <View style={{marginLeft:9}}>
+                        <TouchableOpacity>
                             <Text style={styles.titlu}>Teams</Text>
+                        </TouchableOpacity>
                             <View style={{marginLeft:20,marginTop:5,}}>
                                 <Text style={styles.underText}>Echipa 1</Text>
                                 <Text style={styles.underText}>Echipa 2</Text>

@@ -86,8 +86,11 @@ const Account = ({navigation}) => {
     
     return (
         <View style={styles.container}>
-            <View style={{flex:1,flexDirection:'column',alignItems:'center',marginTop:'20%'}}>
-                <Image style={{width:100,height:100,borderWidth:1,borderRadius:50,borderColor:'white',marginBottom:30,}} source={{uri:user.user.photoURL}}/>
+           
+              {
+                user.user?
+                <View style={{flex:1,flexDirection:'column',alignItems:'center',marginTop:'20%'}}>
+                  <Image style={{width:100,height:100,borderWidth:1,borderRadius:50,borderColor:'white',marginBottom:30,}} source={{uri:user.user.photoURL}}/>
                 <Text style={styles.big_title}>{user.user.displayName}</Text>
                 <View style={{marginTop:20,marginBottom:10,}}>
                     <Text style={styles.title}>E-mail: {user.user.email}</Text>
@@ -97,7 +100,10 @@ const Account = ({navigation}) => {
                         <Text style={styles.title}>Log out</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+                </View>:
+                <View><Text>no user</Text></View>
+              }
+                
             
             {/* <Button title='dute home' onPress={() => navigation.navigate('Notes')}/> */}
             {/* partea cu log out */}
