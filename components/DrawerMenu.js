@@ -22,6 +22,12 @@ import EditLabel from '../components/EditLabel';
 import UserContext from '../components/UserContext';
 
 
+import * as firebase from 'firebase';
+
+if (firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig);
+}
+
 const DrawerMenu = ({navigation}) => {
 
     //const navigation = useNavigation();
@@ -138,8 +144,26 @@ const DrawerMenu = ({navigation}) => {
             console.error(err);
         })
     }
-   
 
+    const [teamsData,setTeamsData] = useState();
+   
+    useEffect(() => {
+        //Get all pets in the query
+        const db = firebase.firestore();
+        if(user.user){
+            console.log('user id effcet pt teams:',user.user.uid)  
+            //console.log(db)
+            db.collection('users').doc(user.user.uid).get().then((snapshot)=>{
+                console.log(snapshot.data().echipe);
+                setTeamsData(snapshot.data().echipe);
+            }).catch((err)=>console.log("err:  ",err));
+            // if (!doc.exists) {
+            //     console.log('No such document!');
+            //   } else {
+            //     console.log('Document data:', doc.data());
+            //   }
+        }
+    }, [user]);
 
 
 
@@ -201,13 +225,25 @@ const DrawerMenu = ({navigation}) => {
                 <ScrollView style={{marginTop:20,flex:1}}>
                     <View>
                         <View style={{marginLeft:9}}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> navigation.navigate('TeamsPage')}>
                             <Text style={styles.titlu}>Teams</Text>
                         </TouchableOpacity>
+                        {
+                            teamsData?
                             <View style={{marginLeft:20,marginTop:5,}}>
-                                <Text style={styles.underText}>Echipa 1</Text>
-                                <Text style={styles.underText}>Echipa 2</Text>
-                            </View>
+                                <FlatList 
+                                    data={teamsData}
+                                            renderItem={( {item} ) =>(
+                                                <View>
+                                                        <Text style={styles.underText}>{item.nume}</Text>
+                                                </View>
+                                                )}
+                                />
+                            </View>:
+                            <Text style={styles.underText}>no teams try log in</Text>
+
+                        }
+                           
                         </View>
                         <View style={{marginTop:20,marginLeft:9,width:250,}}>
                             <View style={{flex:1,flexDirection:'row',justifyContent:'space-between',}}>

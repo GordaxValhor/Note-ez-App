@@ -61,6 +61,8 @@ const SignUp = ({navigation}) => {
             .set({
               email: currentUser.email,
               firstName: firstName,
+              uid: currentUser.uid,
+              echipe: '',
             });
 
             currentUser.updateProfile({
@@ -208,7 +210,7 @@ const SignUp = ({navigation}) => {
                 <TextInput  style={styles.Input} placeholderTextColor='gray' secureTextEntry={true} placeholder='confirmare parola' onChangeText={(text)=>setConfirmPassword(text)}/>
             </View>
             <Text style={[styles.title,{marginVertical:10}]}>Upload a profile pic:</Text>
-            {/* <TouchableOpacity style={[styles.smallBox]} onPress={()=> pickImage()}>
+            <TouchableOpacity style={[styles.smallBox]} onPress={()=> pickImage()}>
                     <Text style={styles.text}>Chose image</Text>
             </TouchableOpacity>
             {
@@ -217,10 +219,10 @@ const SignUp = ({navigation}) => {
                     <Text style={styles.text}>Set this image</Text>
                 </TouchableOpacity>:
                 <ActivityIndicator size="medium" color="white" />
-            } */}
-            <TouchableOpacity style={[styles.smallBox]} onPress={()=> handleImageChoose()}>
+            }
+            {/* <TouchableOpacity style={[styles.smallBox]} onPress={()=> handleImageChoose()}>
                     <Text style={styles.text}>Choose an profile image</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity style={[{alignItems:'center',},styles.Box]} onPress={()=> handleRegistration()}>
                     <Text style={styles.title}>Sign Up</Text>
                     {/* <AntDesign name="google" size={30} color="whites" /> */}

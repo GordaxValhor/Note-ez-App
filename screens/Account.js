@@ -2,9 +2,7 @@ import React,{useState,useEffect} from 'react'
 import { View, Text,Button,StyleSheet,Image,TouchableOpacity } from 'react-native'
 
 import UserContext from '../components/UserContext';
-import * as Google from 'expo-auth-session/providers/google';
 
-import * as AuthSession from 'expo-auth-session';
 
 import * as firebase from 'firebase';
 

@@ -18,6 +18,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Database from 'expo-sqlite-hooks/database';
 import { DBProvider } from 'expo-sqlite-hooks/context/database';
 import { useQuery, useInsert, useUpdate, useDelete } from 'expo-sqlite-hooks/hooks/database';
+import TeamsPage from '../screens/TeamsPage';
 
 
 const Stack = createStackNavigator();
@@ -56,6 +57,14 @@ const homeStack = () => {
                 />
                 {/* <Stack.Screen name="FiltredNotes" options={{header: () => {null}}} component={FiltredNotes} /> */}
                 <Stack.Screen name="TaskPage" component={TaskPage}
+                options={ ({navigation,route}) =>{ return { 
+                    title: '',
+                    headerStyle: {
+                      backgroundColor: '#0a0a0a',
+                    },
+                    }
+                }}/>
+                 <Stack.Screen name="TeamsPage" component={TeamsPage}
                 options={ ({navigation,route}) =>{ return { 
                     title: '',
                     headerStyle: {
