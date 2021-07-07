@@ -172,6 +172,7 @@ const SignUp = ({navigation}) => {
                 setPhotoUrl(`${snapshot}`);
                 console.log(snapshot);
                 console.log('url:',photoURL);
+                setImageChoose(true);
             })
             
         }
@@ -187,6 +188,8 @@ const SignUp = ({navigation}) => {
         uploadImage();
       })
     }
+
+    const [imageChoose,setImageChoose] = useState(false);
     return (
         <View style={styles.container}>
             <View style={{marginVertical:10,alignItems:'center'}}>
@@ -210,16 +213,19 @@ const SignUp = ({navigation}) => {
                 <TextInput  style={styles.Input} placeholderTextColor='gray' secureTextEntry={true} placeholder='confirmare parola' onChangeText={(text)=>setConfirmPassword(text)}/>
             </View>
             <Text style={[styles.title,{marginVertical:10}]}>Upload a profile pic:</Text>
-            <TouchableOpacity style={[styles.smallBox]} onPress={()=> pickImage()}>
-                    <Text style={styles.text}>Chose image</Text>
-            </TouchableOpacity>
             {
-                !uploading?
-                <TouchableOpacity style={[styles.smallBox]} onPress={()=> uploadImage()}>
-                    <Text style={styles.text}>Set this image</Text>
-                </TouchableOpacity>:
-                <ActivityIndicator size="medium" color="white" />
+              imageChoose?
+              <Text style={{color:'#13d40d',fontSize:16,marginBottom:15,}}>Image set and uploaded</Text>:
+              <Text style={{color:'#d10606',fontSize:16,marginBottom:15,}}>Image not set/or uploaded</Text>
             }
+            <View style={{flexDirection:'row'}}>
+              <TouchableOpacity style={{paddingVertical:5,paddingHorizontal:10}} onPress={()=> pickImage()}>
+                      <Text style={[styles.text,{color:'#03a9fc'}]}>Chose image</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.smallBox]} onPress={()=> uploadImage()}>
+                    <Text style={styles.text}>Set this image</Text>
+                </TouchableOpacity>
+            </View>
             {/* <TouchableOpacity style={[styles.smallBox]} onPress={()=> handleImageChoose()}>
                     <Text style={styles.text}>Choose an profile image</Text>
             </TouchableOpacity> */}

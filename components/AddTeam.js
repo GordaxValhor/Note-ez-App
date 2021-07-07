@@ -53,17 +53,22 @@ const AddTeam = () => {
     // adaugare echipa noua
 
     const addTeamToMembers = () =>{
+        const db = firebase.firestore();
         teamMembers.forEach(item =>{
-            var echipeC = {
-                nume: teamName,
-                id: id_echipa
+            if(item.nume != user.user.displayName) {
+                var echipeC = {
+                    nume: teamName,
+                    id: randomNumberId,
+                }
+                db.collection("users")
+                .doc(item.uid).update({echipe: firebase.firestore.FieldValue.arrayUnion(echipeC)}).then(()=>{console.log('a  mers si aduagarea in user din membri')})
+                .catch((err)=>(console.log(err)));
             }
-            db.collection("users")
-            .doc(item.uid).update({echipe: firebase.firestore.FieldValue.arrayUnion(echipeC)}).then(()=>{console.log('a  mers si aduagarea in user din membri')})
-            .catch((err)=>(console.log(err)));
+            
         })
     }
 
+    const [randomNumberId,setRandomNumberId] = useState()
     const addTeam = async () =>{
         //- cream date echipa si apoi le punem in db
 
@@ -74,6 +79,7 @@ const AddTeam = () => {
 
             const db = firebase.firestore();
             var random_nr_id = Math.floor(Math.random() * 500);
+            setRandomNumberId(random_nr_id);
             var id_echipa = user.user.uid.toString() + ' - ' + teamName + ' - ' + random_nr_id.toString();
             //console.log('id_echipa', id_echipa)
 
@@ -98,12 +104,16 @@ const AddTeam = () => {
                 id: id_echipa
             }
 
+            // -- daca exista deja
             db.collection("users")
             .doc(user.user.uid).update({echipe: firebase.firestore.FieldValue.arrayUnion(echipeC)}).then(()=>{console.log('a  mers si aduagarea in user')})
             .catch((err)=>(console.log(err)));
 
             // tre sa adaug echipa asta si la field team de la ceilalti members
             addTeamToMembers();
+        }
+        else{
+            alert('complete all fields')
         }
     }
 
@@ -168,7 +178,7 @@ const AddTeam = () => {
                 {/* <TouchableOpacity style={styles.Box}>
                     <Text style={[styles.text,{textAlign:'center'}]}>Add member</Text>
                 </TouchableOpacity> */}
-                <View style={{minHeight:50, height:'22%',marginTop: 10,width:'100%'}}>
+                <View style={{minHeight:50, height:'15%',marginTop: 10,width:'100%'}}>
                     <Text style={styles.text}>Membri echipa</Text>
                     <FlatList data={teamMembers} renderItem={({item})=>(
                                                 <TouchableOpacity onPress={() => {removeMember(item.id)}}>
@@ -181,7 +191,7 @@ const AddTeam = () => {
                 <Text style={styles.text}>Add picture for team</Text>
             </View>
             <TouchableOpacity style={styles.Box} onPress={()=> addTeam()}>
-                <Text style={styles.text}>Test</Text>
+                <Text style={styles.text}>Create new team</Text>
             </TouchableOpacity>
         </View>
     )
@@ -224,7 +234,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 25,
         margin:20,
-        width: 120,
+        width: 150,
       },
     
 })

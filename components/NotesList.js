@@ -10,9 +10,25 @@ import LabelListNote from './LabelListNote';
 
 
 
-const NotesList = ({navigation,filterLabels,route,filter}) => {
+import * as firebase from 'firebase';
+
+import { firebaseConfig } from '../firebase'
+
+if (firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+import UserContext from '../components/UserContext';
+
+
+const NotesList = ({navigation,filterLabels,route,filter, whatNotes, teamId}) => {
 
     //const navigation = useNavigation();
+
+
+    //combinam si facem sa fie dinam cat si pt online
+
+    const user = React.useContext(UserContext);
 
     const {loading, error, data, refresh} = useQuery("select * from Notes Order by NoteId desc", []);
 
@@ -25,27 +41,87 @@ const NotesList = ({navigation,filterLabels,route,filter}) => {
     const [allLabelsId,setAllLabelsId] =useState()
 
 
+    // preluare date din firestore fct
+
+    const [NotesFirestore, setNotesFirestore] = useState([])
+
+    const getNotesData = (teamId) => {
+        const db = firebase.firestore();
+        if(teamId){
+         
+
+            //---------------------
+
+            // db.collection('echipe').doc(teamId).collection('date_notes').get()
+            // .then((snapshot)=>{
+               
+            //     let notes = snapshot.docs.map(doc =>{
+            //         const data = doc.data();
+            //         const Noteid = doc.id;
+            //         return {Noteid, ...data}
+            //     });
+            //     console.log('notite din firestore:',notes)
+            // })
+            //-----------------
+
+            let ref =  db.collection('echipe').doc(teamId).collection('date_notes')
+
+            ref.onSnapshot((querySnapshot)=>{
+                let notes = querySnapshot.docs.map(doc =>{
+                    const data = doc.data();
+                    const NoteId = doc.id;
+                    const TeamId = teamId;
+                    return {NoteId, TeamId, ...data}
+                });
+                console.log('notite din firestore:',notes)
+                setNotes(notes);
+            })
+        }
+        
+        // ref.onSnapshot((querySnapshot)=>{
+        //     console.log('querry snapshot data notes:',querySnapshot.data())
+        //     //setNotes(querySnapshot.data());
+        // });
+        }
+
+    useEffect(()=>{
+            if(user && whatNotes ==='online'){
+                getNotesData(teamId);
+            }
+        },[user,whatNotes,teamId]);
+    
     useEffect(() => {
-        if(data)
-        {
-            const NotesListAux = [];
-            for(let i = 0; i < data.rows.length; i++)
-            {
-                NotesListAux.push(data.rows.item(i));
-            }
-            setNotes(NotesListAux);
+
+        if(whatNotes != 'online'){
+                if(data)
+                {
+                    const NotesListAux = [];
+                    for(let i = 0; i < data.rows.length; i++)
+                    {
+                        NotesListAux.push(data.rows.item(i));
+                    }
+                    setNotes(NotesListAux);
+                }
+                if(AllLabelsId.data){
+                    const labelListAux = [];
+                    for(let i = 0; i < AllLabelsId.data.rows.length; i++)
+                    {
+                        labelListAux.push(AllLabelsId.data.rows.item(i));
+                    }
+                    setAllLabelsId(labelListAux);
+                }
+                refresh();
+                AllLabelsId.refresh();
+
         }
-        if(AllLabelsId.data){
-            const labelListAux = [];
-            for(let i = 0; i < AllLabelsId.data.rows.length; i++)
-            {
-                labelListAux.push(AllLabelsId.data.rows.item(i));
-            }
-            setAllLabelsId(labelListAux);
+        else {
+            // preluam data din firestore
+            // if(user){
+            //     getNotesData();
+            // }
         }
-        refresh();
-        AllLabelsId.refresh();
-    }, [data,navigation,AllLabelsId.data]);
+        
+    }, [data,navigation,AllLabelsId.data,user]);
 
     //pentru filtru labels
     
@@ -207,16 +283,26 @@ const NotesList = ({navigation,filterLabels,route,filter}) => {
             <ScrollView>
                     <View style={{height:50}}></View>
                     {/* <Button title='Apasa' onPress={()=> filterNotesForCurrentLabel()}></Button> */}
+                    {
+                        whatNotes ==='online'?
+                        <Text style={[styles.title,{textAlign:'center'}]}>Teams</Text>:
+                        null
+                    }
                         <ScrollView >
                             <View style={{flex:1,flexDirection:'row',margin:0}}>
                                 <FlatList 
                                     data={Notes.filter((_,i)=>i% 2 == 0)}
                                     renderItem={( {item} ) =>(
-                                        <TouchableOpacity style={styles.noteStyle} onPress={()=>{navigation.navigate('NotePage',item)}}>
+                                        <TouchableOpacity style={styles.noteStyle} onPress={()=>{whatNotes ==='online'? navigation.navigate('NotePageTeams',item,teamId):navigation.navigate('NotePage',item)}}>
                                             <Text style={styles.title}>{item.Nume}</Text>
                                             <Text numberOfLines={20}style={styles.text}>{item.TextContinut} </Text>
                                             {/* <Text style={styles.text}>{item.NoteId} </Text> */}
-                                            <LabelListNote labelsList={allLabelsId} NoteId={item.NoteId}/>
+                                            {
+                                                whatNotes !='online'?
+                                                <LabelListNote labelsList={allLabelsId} NoteId={item.NoteId}/>:
+                                                null
+                                            }
+                                            
 
                                         </TouchableOpacity>)}
                                 />
@@ -224,12 +310,16 @@ const NotesList = ({navigation,filterLabels,route,filter}) => {
                                     data={Notes.filter((_,i)=>i% 2 !== 0)}
                                     renderItem={( {item} ) =>(
                                         <View>
-                                        <TouchableOpacity style={styles.noteStyle} onPress={()=>{navigation.navigate('NotePage',item)}}>
+                                        <TouchableOpacity style={styles.noteStyle} onPress={()=>{whatNotes ==='online'? navigation.navigate('NotePageTeams',item,teamId):navigation.navigate('NotePage',item)}}>
                                             <Text style={styles.title}>{item.Nume}</Text>
                                             <Text numberOfLines={20}style={styles.text}>{item.TextContinut} </Text>
                                             {/* <Text style={styles.text}>{item.NoteId} </Text> */}
                                             <View styles={{flexDirection:'row',flex:1,}}>
-                                            <LabelListNote labelsList={allLabelsId} NoteId={item.NoteId}/>
+                                            {
+                                                whatNotes !='online'?
+                                                <LabelListNote labelsList={allLabelsId} NoteId={item.NoteId}/>:
+                                                null
+                                            }
                                             </View>
                                         </TouchableOpacity>
                                         

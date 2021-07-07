@@ -154,7 +154,7 @@ const DrawerMenu = ({navigation}) => {
             console.log('user id effcet pt teams:',user.user.uid)  
             //console.log(db)
             db.collection('users').doc(user.user.uid).get().then((snapshot)=>{
-                console.log(snapshot.data().echipe);
+                console.log('team data drawer menu: ',snapshot.data().echipe);
                 setTeamsData(snapshot.data().echipe);
             }).catch((err)=>console.log("err:  ",err));
             // if (!doc.exists) {
@@ -166,6 +166,23 @@ const DrawerMenu = ({navigation}) => {
     }, [user]);
 
 
+    const getTeamsData = () => {
+            const db = firebase.firestore();
+
+            const ref = db.collection('users').doc(user.user.uid)
+    
+            ref.onSnapshot((querySnapshot)=>{
+                console.log('querry snapshot data:',querySnapshot.data())
+                setTeamsData(querySnapshot.data().echipe);
+    
+            });
+        
+    }
+    useEffect(()=>{
+        if(user.user){
+            getTeamsData();
+        }
+    },[user]);
 
 
     return (
@@ -192,12 +209,14 @@ const DrawerMenu = ({navigation}) => {
                         </TouchableOpacity>
                     </View>
                 </Modal>
-                <View style={{borderBottomWidth:1,borderColor:'white',width:'100%',padding:10}}>
-                        <Image
-                        style={{resizeMode:'contain',height:50,width:'100%'}}
-                        source={require('../assets/drawable-xxhdpi/grp25.png')}
-                        />
-                </View>
+                <TouchableOpacity onPress={() => navigation.navigate('Home', {screen: 'Notes'})}>
+                    <View style={{borderBottomWidth:1,borderColor:'white',width:'100%',padding:10}}>
+                            <Image
+                            style={{resizeMode:'contain',height:50,width:'100%'}}
+                            source={require('../assets/drawable-xxhdpi/grp25.png')}
+                            />
+                    </View>
+                </TouchableOpacity>
                 <View style={{marginTop:20, width:'100%',padding:10,}}>
                     <Text style={styles.titlu}>Account</Text>
                     <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-around',}}>
@@ -234,9 +253,9 @@ const DrawerMenu = ({navigation}) => {
                                 <FlatList 
                                     data={teamsData}
                                             renderItem={( {item} ) =>(
-                                                <View>
+                                                    <TouchableOpacity onPress={()=>{navigation.navigate('Teams', {screen: 'Notes',params: { teamId: item.id }})}}>
                                                         <Text style={styles.underText}>{item.nume}</Text>
-                                                </View>
+                                                    </TouchableOpacity>
                                                 )}
                                 />
                             </View>:

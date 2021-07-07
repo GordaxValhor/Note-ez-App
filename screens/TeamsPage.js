@@ -1,17 +1,21 @@
 import React,{useState,useEffect} from 'react'
-import { View, Text,Button,StyleSheet,Image,TouchableOpacity } from 'react-native'
+import { View, Text,Button,StyleSheet,Image,TouchableOpacity,ScrollView,FlatList } from 'react-native'
 
 import UserContext from '../components/UserContext';
 
 
 import { Feather } from '@expo/vector-icons';
 
-
 import * as firebase from 'firebase';
+
+if (firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig);
+}
 
 import { HeaderBackButton } from '@react-navigation/stack';
 
 import AddTeam from '../components/AddTeam';
+import TeamItem from '../components/TeamItem';
 
 const TeamsPage = ({navigation}) => {
     
@@ -40,24 +44,65 @@ const TeamsPage = ({navigation}) => {
             navigation.navigate('LogIn')
         }
     },[])
+
+    const db = firebase.firestore();
+
+    const ref = db.collection('users').doc(user.user.uid)
+    const [teamsData,setTeamsData] = useState();
+    useEffect(()=>{
+
+        if(user.user){
+            //const db = firebase.firestore();
+            db.collection('users').doc(user.user.uid).get().then((snapshot)=>{
+                console.log(snapshot.data().echipe);
+                setTeamsData(snapshot.data().echipe);
+            }).catch((err)=>console.log("err:  ",err));
+        }
+    },[user])
+
+    const getTeamsData = () => {
+        ref.onSnapshot((querySnapshot)=>{
+            //console.log('querry snapshot data:',querySnapshot.data())
+            setTeamsData(querySnapshot.data().echipe);
+
+        });
+    }
+    useEffect(()=>{
+        getTeamsData();
+    },[]);
     return (
         <View style={styles.container}>
-            <Text style={[styles.big_title,{marginBottom:10,fontSize:26,}]}>Teams Page</Text>
-            <TouchableOpacity style={{marginVertical:5,padding:5}}onPress={()=>setShowAddTeamSec(!showAddTeamSec)}>
+                
+                <Text style={[styles.big_title,{marginBottom:10,fontSize:26,}]}>Teams Page</Text>
+                <Text style={styles.text}>Create new team.</Text>
+                <TouchableOpacity style={{marginVertical:5,padding:5}}onPress={()=>setShowAddTeamSec(!showAddTeamSec)}>
+                    {
+                        showAddTeamSec?
+                        <Feather name="chevron-up" size={24} color="#BFBFBF" />
+                        :
+                        <Feather name="chevron-down" size={24} color="#BFBFBF" />
+                    }
+                </TouchableOpacity>
                 {
                     showAddTeamSec?
-                    <Feather name="chevron-up" size={24} color="#BFBFBF" />
-                    :
-                    <Feather name="chevron-down" size={24} color="#BFBFBF" />
-                }
-            </TouchableOpacity>
-            {
-                showAddTeamSec?
-                <AddTeam />:
-                null
-            }
-            <Text style={styles.text}>-----------------------</Text>
-            <Text style={styles.text}>Partea unde afisam echipele in care suntem deja cu flatlist</Text>
+                    <AddTeam />:
+                    null
+                }               
+                {
+                    teamsData?
+                    <View>
+                        <Text style={[styles.big_title,{marginBottom:15,textAlign:'center'}]}>Your teams</Text>
+                        <FlatList 
+                            data={teamsData}
+                                renderItem={( {item} ) =>(
+                                        <TeamItem teamId={item.id} navigation={navigation}/>
+                                    )}
+                        />
+                    </View>:
+                    <Text style={styles.text}>You don't have any team. Create one or ask to be added in one.</Text>
+                }  
+                
+                
         </View>
     )
 }

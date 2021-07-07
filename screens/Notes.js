@@ -139,7 +139,7 @@ const Notes = ( {navigation,route} ) => {
                 <Text>Loading DB</Text>
               :
                 <DBProvider db={db}>
-                    <NotesList navigation={navigation} filterLabels={routeLabelId} route={route} filter={filterSearch}/>
+                    <NotesList navigation={navigation} filterLabels={routeLabelId} route={route} filter={filterSearch} whatNotes='offline'/>
                 </DBProvider>
             }
             

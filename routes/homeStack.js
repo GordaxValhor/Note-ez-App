@@ -19,6 +19,7 @@ import Database from 'expo-sqlite-hooks/database';
 import { DBProvider } from 'expo-sqlite-hooks/context/database';
 import { useQuery, useInsert, useUpdate, useDelete } from 'expo-sqlite-hooks/hooks/database';
 import TeamsPage from '../screens/TeamsPage';
+import TeamPage from '../screens/TeamPage';
 
 
 const Stack = createStackNavigator();
@@ -40,9 +41,9 @@ const homeStack = () => {
     
 
     return (
-        
             <Stack.Navigator>
                 <Stack.Screen name="Notes" options={{header: () => {null}}} component={tabStack} />
+
                 {/* <Stack.Screen name="" component={Notes}/> */}
                 <Stack.Screen name="NotePage" component={NotePage}
                 options={ ({navigation,route}) =>{ return { 
@@ -65,6 +66,14 @@ const homeStack = () => {
                     }
                 }}/>
                  <Stack.Screen name="TeamsPage" component={TeamsPage}
+                options={ ({navigation,route}) =>{ return { 
+                    title: '',
+                    headerStyle: {
+                      backgroundColor: '#0a0a0a',
+                    },
+                    }
+                }}/>
+                 <Stack.Screen name="TeamPage" component={TeamPage}
                 options={ ({navigation,route}) =>{ return { 
                     title: '',
                     headerStyle: {
